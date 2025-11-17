@@ -1,0 +1,553 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		6A019E532E67BB2700E7324F /* Founder EventsShareExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 6A019E492E67BB2700E7324F /* Founder EventsShareExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		6A32DE5F2E429CB700398F24 /* OpenAI in Frameworks */ = {isa = PBXBuildFile; productRef = 6A32DE5E2E429CB700398F24 /* OpenAI */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		6A019E512E67BB2700E7324F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6A32DE102E41A8D600398F24 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 6A019E482E67BB2700E7324F;
+			remoteInfo = ScheduleShareShareExtension;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		6A019E542E67BB2700E7324F /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				6A019E532E67BB2700E7324F /* Founder EventsShareExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		6A019E492E67BB2700E7324F /* Founder EventsShareExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Founder EventsShareExtension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		6A32DE182E41A8D600398F24 /* Founder Events.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Founder Events.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		6A04CBF12E79EC7700E0B14D /* Exceptions for "Founder EventsShareExtension" folder in "Founder EventsShareExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 6A019E482E67BB2700E7324F /* Founder EventsShareExtension */;
+		};
+		6A32DE482E41B0C500398F24 /* Exceptions for "Founder Events" folder in "Founder Events" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 6A32DE172E41A8D600398F24 /* Founder Events */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		6A019E4A2E67BB2700E7324F /* Founder EventsShareExtension */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				6A04CBF12E79EC7700E0B14D /* Exceptions for "Founder EventsShareExtension" folder in "Founder EventsShareExtension" target */,
+			);
+			path = "Founder EventsShareExtension";
+			sourceTree = "<group>";
+		};
+		6A32DE1A2E41A8D600398F24 /* Founder Events */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				6A32DE482E41B0C500398F24 /* Exceptions for "Founder Events" folder in "Founder Events" target */,
+			);
+			path = "Founder Events";
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		6A019E462E67BB2700E7324F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6A32DE152E41A8D600398F24 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6A32DE5F2E429CB700398F24 /* OpenAI in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		6A32DE0F2E41A8D600398F24 = {
+			isa = PBXGroup;
+			children = (
+				6A32DE1A2E41A8D600398F24 /* Founder Events */,
+				6A019E4A2E67BB2700E7324F /* Founder EventsShareExtension */,
+				6A32DE192E41A8D600398F24 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		6A32DE192E41A8D600398F24 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				6A32DE182E41A8D600398F24 /* Founder Events.app */,
+				6A019E492E67BB2700E7324F /* Founder EventsShareExtension.appex */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		6A019E482E67BB2700E7324F /* Founder EventsShareExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6A019E572E67BB2700E7324F /* Build configuration list for PBXNativeTarget "Founder EventsShareExtension" */;
+			buildPhases = (
+				6A019E452E67BB2700E7324F /* Sources */,
+				6A019E462E67BB2700E7324F /* Frameworks */,
+				6A04CBF02E79EC7700E0B14D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				6A019E4A2E67BB2700E7324F /* Founder EventsShareExtension */,
+			);
+			name = "Founder EventsShareExtension";
+			packageProductDependencies = (
+			);
+			productName = ScheduleShareShareExtension;
+			productReference = 6A019E492E67BB2700E7324F /* Founder EventsShareExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		6A32DE172E41A8D600398F24 /* Founder Events */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6A32DE262E41A8D700398F24 /* Build configuration list for PBXNativeTarget "Founder Events" */;
+			buildPhases = (
+				6A32DE142E41A8D600398F24 /* Sources */,
+				6A32DE152E41A8D600398F24 /* Frameworks */,
+				6A32DE162E41A8D600398F24 /* Resources */,
+				6A019E542E67BB2700E7324F /* Embed Foundation Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				6A019E522E67BB2700E7324F /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				6A32DE1A2E41A8D600398F24 /* Founder Events */,
+			);
+			name = "Founder Events";
+			packageProductDependencies = (
+				6A32DE5E2E429CB700398F24 /* OpenAI */,
+			);
+			productName = ScheduleShare;
+			productReference = 6A32DE182E41A8D600398F24 /* Founder Events.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		6A32DE102E41A8D600398F24 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1640;
+				LastUpgradeCheck = 1640;
+				TargetAttributes = {
+					6A019E482E67BB2700E7324F = {
+						CreatedOnToolsVersion = 16.4;
+					};
+					6A32DE172E41A8D600398F24 = {
+						CreatedOnToolsVersion = 16.2;
+					};
+				};
+			};
+			buildConfigurationList = 6A32DE132E41A8D600398F24 /* Build configuration list for PBXProject "Founder Events" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 6A32DE0F2E41A8D600398F24;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				6A32DE5D2E429CB700398F24 /* XCRemoteSwiftPackageReference "OpenAI" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 6A32DE192E41A8D600398F24 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				6A32DE172E41A8D600398F24 /* Founder Events */,
+				6A019E482E67BB2700E7324F /* Founder EventsShareExtension */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		6A04CBF02E79EC7700E0B14D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6A32DE162E41A8D600398F24 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		6A019E452E67BB2700E7324F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6A32DE142E41A8D600398F24 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		6A019E522E67BB2700E7324F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 6A019E482E67BB2700E7324F /* Founder EventsShareExtension */;
+			targetProxy = 6A019E512E67BB2700E7324F /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		6A019E552E67BB2700E7324F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = "Founder EventsShareExtension/Founder EventsShareExtensionDebug.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = WGM5LN2CCW;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = "Founder EventsShareExtension/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = ScheduleShareShareExtension;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.HainanMandi.eventsAI.ShareExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		6A019E562E67BB2700E7324F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = "Founder EventsShareExtension/Founder EventsShareExtensionRelease.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = WGM5LN2CCW;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = "Founder EventsShareExtension/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = ScheduleShareShareExtension;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.HainanMandi.eventsAI.ShareExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		6A32DE242E41A8D700398F24 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = HPTTZS5J27;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		6A32DE252E41A8D700398F24 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = HPTTZS5J27;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		6A32DE272E41A8D700398F24 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Founder Events/ScheduleShareDebug.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Founder Events/Preview Content\"";
+				DEVELOPMENT_TEAM = WGM5LN2CCW;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Founder Events/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Founder Events";
+				INFOPLIST_KEY_NSCalendarsUsageDescription = "Founder Events needs calendar access to save extracted events to your calendar. This allows the app to automatically add events after extracting information from your screenshots.";
+				INFOPLIST_KEY_NSCameraUsageDescription = "Founder Events needs camera access to capture event information from screenshots and photos. This allows you to quickly create calendar events by taking pictures of invitations, flyers, or any text containing event details.";
+				INFOPLIST_KEY_NSContactsUsageDescription = "Founder Events can access your contacts to make sharing events easier by suggesting contacts when sharing calendars.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Founder Events uses your location to optimize route planning between events. This helps calculate the best travel times and routes from your current position to your scheduled events.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Founder Events needs photo library access to select existing screenshots with event information. You can choose photos from your library that contain event details to automatically extract and create calendar events.";
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UIRequiredDeviceCapabilities = armv7;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.HainanMandi.eventsAI;
+				PRODUCT_NAME = "Founder Events";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		6A32DE282E41A8D700398F24 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Founder Events/ScheduleShareRelease.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Founder Events/Preview Content\"";
+				DEVELOPMENT_TEAM = WGM5LN2CCW;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Founder Events/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Founder Events";
+				INFOPLIST_KEY_NSCalendarsUsageDescription = "Founder Events needs calendar access to save extracted events to your calendar. This allows the app to automatically add events after extracting information from your screenshots.";
+				INFOPLIST_KEY_NSCameraUsageDescription = "Founder Events needs camera access to capture event information from screenshots and photos. This allows you to quickly create calendar events by taking pictures of invitations, flyers, or any text containing event details.";
+				INFOPLIST_KEY_NSContactsUsageDescription = "Founder Events can access your contacts to make sharing events easier by suggesting contacts when sharing calendars.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Founder Events uses your location to optimize route planning between events. This helps calculate the best travel times and routes from your current position to your scheduled events.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Founder Events needs photo library access to select existing screenshots with event information. You can choose photos from your library that contain event details to automatically extract and create calendar events.";
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UIRequiredDeviceCapabilities = armv7;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.HainanMandi.eventsAI;
+				PRODUCT_NAME = "Founder Events";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		6A019E572E67BB2700E7324F /* Build configuration list for PBXNativeTarget "Founder EventsShareExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6A019E552E67BB2700E7324F /* Debug */,
+				6A019E562E67BB2700E7324F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		6A32DE132E41A8D600398F24 /* Build configuration list for PBXProject "Founder Events" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6A32DE242E41A8D700398F24 /* Debug */,
+				6A32DE252E41A8D700398F24 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		6A32DE262E41A8D700398F24 /* Build configuration list for PBXNativeTarget "Founder Events" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6A32DE272E41A8D700398F24 /* Debug */,
+				6A32DE282E41A8D700398F24 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		6A32DE5D2E429CB700398F24 /* XCRemoteSwiftPackageReference "OpenAI" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/MacPaw/OpenAI";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.4.5;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		6A32DE5E2E429CB700398F24 /* OpenAI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6A32DE5D2E429CB700398F24 /* XCRemoteSwiftPackageReference "OpenAI" */;
+			productName = OpenAI;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 6A32DE102E41A8D600398F24 /* Project object */;
+}

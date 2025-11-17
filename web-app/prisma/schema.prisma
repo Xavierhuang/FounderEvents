@@ -1,0 +1,256 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  image         String?
+  emailVerified DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Authentication
+  accounts Account[]
+  sessions Session[]
+
+  // ScheduleShare data
+  events            CalendarEvent[]
+  linkedInProfiles  LinkedInProfile[]
+  messageTemplates  MessageTemplate[]
+  routePlans        RoutePlan[]
+  
+  // Settings
+  preferences       UserPreferences?
+  calendarSettings  CalendarSettings?
+
+  @@map("users")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verificationtokens")
+}
+
+// ScheduleShare Models
+
+model CalendarEvent {
+  id               String    @id @default(cuid())
+  title            String
+  startDate        DateTime
+  endDate          DateTime
+  location         String?
+  notes            String?   @db.Text
+  eventIdentifier  String?   // For Google Calendar integration
+  
+  // AI Extraction data
+  extractedInfo    Json?     // Store ExtractedEventInfo as JSON
+  confidence       Float?
+  
+  // Relationships
+  userId           String
+  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  linkedProfiles   LinkedInProfile[]
+  routeSegments    RouteSegment[]
+  
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  @@map("calendar_events")
+}
+
+model LinkedInProfile {
+  id              String    @id @default(cuid())
+  profileURL      String
+  name            String
+  company         String?
+  title           String?
+  notes           String?   @db.Text
+  linkedDate      DateTime  @default(now())
+  
+  // Relationships
+  userId          String
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  linkedEventId   String?
+  linkedEvent     CalendarEvent? @relation(fields: [linkedEventId], references: [id], onDelete: SetNull)
+  
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@map("linkedin_profiles")
+}
+
+model MessageTemplate {
+  id          String   @id @default(cuid())
+  name        String
+  template    String   @db.Text
+  isDefault   Boolean  @default(false)
+  
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("message_templates")
+}
+
+model RoutePlan {
+  id              String    @id @default(cuid())
+  name            String
+  startLocation   Json?     // LocationCoordinate as JSON
+  totalTime       Int       // in seconds
+  totalCost       Float
+  
+  userId          String
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  segments        RouteSegment[]
+  
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@map("route_plans")
+}
+
+model RouteSegment {
+  id                String    @id @default(cuid())
+  fromLocation      Json      // LocationCoordinate as JSON
+  toLocation        Json      // LocationCoordinate as JSON
+  transportMode     String    // TransportationMode enum as string
+  travelTime        Int       // in seconds
+  cost              Float
+  instructions      String    @db.Text
+  departureTime     DateTime
+  arrivalTime       DateTime
+  
+  routePlanId       String
+  routePlan         RoutePlan @relation(fields: [routePlanId], references: [id], onDelete: Cascade)
+  eventId           String?
+  event             CalendarEvent? @relation(fields: [eventId], references: [id], onDelete: SetNull)
+  
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  @@map("route_segments")
+}
+
+model GarysGuideEvent {
+  id              String    @id @default(cuid())
+  title           String
+  date            String
+  time            String
+  price           String
+  venue           String
+  speakers        String    @db.Text
+  url             String
+  isGaryEvent     Boolean   @default(false)
+  isPopularEvent  Boolean   @default(false)
+  week            String
+  
+  // Metadata
+  scrapedAt       DateTime  @default(now())
+  isActive        Boolean   @default(true)
+  
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@map("garys_guide_events")
+}
+
+model UserPreferences {
+  id                    String   @id @default(cuid())
+  timezone              String   @default("America/New_York")
+  theme                 String   @default("light") // light, dark, system
+  defaultEventDuration  Int      @default(3600)    // 1 hour in seconds
+  weekStartsOn          Int      @default(1)       // Monday = 1, Sunday = 0
+  
+  userId                String   @unique
+  user                  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  @@map("user_preferences")
+}
+
+model CalendarSettings {
+  id                      String   @id @default(cuid())
+  googleCalendarEnabled   Boolean  @default(false)
+  googleCalendarId        String?  // Primary calendar ID
+  autoSync                Boolean  @default(false)
+  syncInterval            Int      @default(3600) // 1 hour in seconds
+  
+  userId                  String   @unique
+  user                    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+
+  @@map("calendar_settings")
+}
+
+// Enums (stored as strings in the database)
+enum TransportationMode {
+  WALKING
+  SUBWAY
+  BUS
+  TAXI
+  RIDESHARE
+  DRIVING
+}
+
+enum SharingMethod {
+  ICS_FILE
+  EMAIL
+  MESSAGE
+  LINK
+}
+
+enum EventType {
+  REGULAR
+  POPULAR
+  GARY_EVENT
+}

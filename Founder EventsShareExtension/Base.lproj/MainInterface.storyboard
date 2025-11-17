@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Share View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="ShareViewController" customModule="ScheduleShareShareExtension" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Select an event to link this LinkedIn profile to:" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kId-c2-rCX">
+                                <rect key="frame" x="20" y="59" width="353" height="20.333333333333314"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedTextColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GJd-Xh-3ar">
+                                <rect key="frame" x="20" y="99.333333333333314" width="120" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="120" id="6Tk-2c-8mE"/>
+                                    <constraint firstAttribute="height" constant="40" id="bN4-1e-8QK"/>
+                                </constraints>
+                                <state key="normal" title="All Events">
+                                    <color key="titleColor" systemColor="systemBackgroundColor"/>
+                                </state>
+                                <buttonConfiguration key="configuration" style="filled" title="All Events">
+                                    <fontDescription key="titleFontDescription" type="boldSystem" pointSize="16"/>
+                                    <backgroundConfiguration key="background">
+                                        <color key="backgroundColor" systemColor="systemBlueColor"/>
+                                    </backgroundConfiguration>
+                                </buttonConfiguration>
+                                <connections>
+                                    <action selector="toggleEventFilter" destination="BYZ-38-t0r" eventType="touchUpInside" id="u4Y-1b-2cD"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8WV-2d-3kL">
+                                <rect key="frame" x="253" y="99.333333333333314" width="120" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="120" id="8xr-1f-9mP"/>
+                                    <constraint firstAttribute="height" constant="40" id="fN3-2g-0hQ"/>
+                                </constraints>
+                                <state key="normal" title="Link Profile">
+                                    <color key="titleColor" systemColor="systemBackgroundColor"/>
+                                </state>
+                                <buttonConfiguration key="configuration" style="filled" title="Link Profile">
+                                    <fontDescription key="titleFontDescription" type="boldSystem" pointSize="16"/>
+                                    <backgroundConfiguration key="background">
+                                        <color key="backgroundColor" systemColor="systemGreenColor"/>
+                                    </backgroundConfiguration>
+                                </buttonConfiguration>
+                                <connections>
+                                    <action selector="postTapped" destination="BYZ-38-t0r" eventType="touchUpInside" id="vB5-3c-4eF"/>
+                                </connections>
+                            </button>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="QS5-Rx-42E">
+                                <rect key="frame" x="0.0" y="159.33333333333331" width="393" height="692.66666666666669"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            </tableView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="6Tk-Oe-BBY"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="kId-c2-rCX" firstAttribute="top" secondItem="6Tk-Oe-BBY" secondAttribute="top" constant="20" id="2cD-3e-4fG"/>
+                            <constraint firstItem="6Tk-Oe-BBY" firstAttribute="trailing" secondItem="kId-c2-rCX" secondAttribute="trailing" constant="20" id="3fG-4h-5iH"/>
+                            <constraint firstItem="kId-c2-rCX" firstAttribute="leading" secondItem="6Tk-Oe-BBY" secondAttribute="leading" constant="20" id="4h5-6i-7jK"/>
+                            <constraint firstItem="GJd-Xh-3ar" firstAttribute="top" secondItem="kId-c2-rCX" secondAttribute="bottom" constant="20" id="5i7-8j-9kL"/>
+                            <constraint firstItem="GJd-Xh-3ar" firstAttribute="leading" secondItem="6Tk-Oe-BBY" secondAttribute="leading" constant="20" id="6j8-9k-0lM"/>
+                            <constraint firstItem="8WV-2d-3kL" firstAttribute="top" secondItem="kId-c2-rCX" secondAttribute="bottom" constant="20" id="7k9-0l-1mN"/>
+                            <constraint firstItem="6Tk-Oe-BBY" firstAttribute="trailing" secondItem="8WV-2d-3kL" secondAttribute="trailing" constant="20" id="8l0-1m-2nO"/>
+                            <constraint firstItem="QS5-Rx-42E" firstAttribute="top" secondItem="GJd-Xh-3ar" secondAttribute="bottom" constant="20" id="9m1-2n-3oP"/>
+                            <constraint firstItem="QS5-Rx-42E" firstAttribute="leading" secondItem="6Tk-Oe-BBY" secondAttribute="leading" id="0n2-3o-4pQ"/>
+                            <constraint firstItem="6Tk-Oe-BBY" firstAttribute="trailing" secondItem="QS5-Rx-42E" secondAttribute="trailing" id="1o3-4p-5qR"/>
+                            <constraint firstItem="6Tk-Oe-BBY" firstAttribute="bottom" secondItem="QS5-Rx-42E" secondAttribute="bottom" constant="20" id="2p4-5q-6rS"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="132" y="4"/>
+        </scene>
+    </scenes>
+    <resources>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemBlueColor">
+            <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemGreenColor">
+            <color red="0.20392156862745098" green="0.7803921568627451" blue="0.34901960784313724" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
+</document>
+
