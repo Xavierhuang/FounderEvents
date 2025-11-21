@@ -9,11 +9,9 @@ The ScheduleShare app now includes a **Discover** tab that allows users to brows
 ### 🎯 Event Discovery
 - **Browse Events**: View all available events from Gary's Guide
 - **Filter by Week**: Filter events by specific weeks (Aug 04, Aug 11, etc.)
-- **Filter by Type**: Filter by event categories:
+- **Filter by Type**: Toggle between:
   - All Events
-  - Popular Events (highly attended events)
-  - Free Events
-  - Paid Events
+  - Popular Events (scraped directly from Gary's Guide popular section)
 
 ### 🎪 Event Information
 Each event displays:

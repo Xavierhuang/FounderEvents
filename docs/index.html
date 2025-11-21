@@ -3,151 +3,440 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Founder Events - Privacy Policy & Terms</title>
+    <title>Founder Events - Discover & Manage NYC Tech Events</title>
+    <meta name="description" content="Never miss a founder event in NYC. Discover, save, and share tech events with intelligent calendar management.">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
+        
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             line-height: 1.6;
             color: #333;
-            background: #f5f5f7;
+            overflow-x: hidden;
         }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 40px 20px;
-        }
-        header {
-            text-align: center;
-            margin-bottom: 60px;
-            padding: 40px 0;
+        
+        /* Hero Section */
+        .hero {
             background: linear-gradient(135deg, #1e3a5f 0%, #3d6fa8 100%);
             color: white;
-            border-radius: 12px;
+            padding: 80px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
         }
-        header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120"><path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" fill="rgba(255,255,255,0.05)"/></svg>') no-repeat bottom;
+            background-size: cover;
+            opacity: 0.3;
         }
-        header p {
-            font-size: 1.2em;
-            opacity: 0.9;
+        
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
         }
-        .nav-links {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
+        
+        .hero h1 {
+            font-size: 3.5em;
+            margin-bottom: 20px;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+        
+        .hero .tagline {
+            font-size: 1.5em;
             margin-bottom: 40px;
-            flex-wrap: wrap;
+            opacity: 0.95;
+            font-weight: 400;
         }
-        .nav-links a {
-            padding: 12px 24px;
+        
+        .cta-button {
+            display: inline-block;
+            padding: 18px 48px;
             background: white;
             color: #1e3a5f;
             text-decoration: none;
-            border-radius: 8px;
-            font-weight: 600;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.2em;
             transition: all 0.3s;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin: 10px;
         }
-        .nav-links a:hover {
-            background: #1e3a5f;
+        
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+        
+        .cta-secondary {
+            background: transparent;
             color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            border: 2px solid white;
         }
-        .content {
+        
+        /* Features Section */
+        .features {
+            padding: 80px 20px;
+            background: #f8f9fa;
+        }
+        
+        .features-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 2.5em;
+            color: #1e3a5f;
+            margin-bottom: 60px;
+            font-weight: 700;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-top: 40px;
+        }
+        
+        .feature-card {
             background: white;
             padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: 16px;
+            text-align: center;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.07);
         }
-        h2 {
-            color: #1e3a5f;
-            margin-top: 40px;
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        .feature-icon {
+            font-size: 3.5em;
             margin-bottom: 20px;
-            font-size: 1.8em;
         }
-        h3 {
-            color: #3d6fa8;
-            margin-top: 30px;
-            margin-bottom: 15px;
-            font-size: 1.4em;
-        }
-        p {
+        
+        .feature-card h3 {
+            font-size: 1.5em;
+            color: #1e3a5f;
             margin-bottom: 15px;
         }
-        ul, ol {
-            margin-left: 30px;
-            margin-bottom: 15px;
+        
+        .feature-card p {
+            color: #666;
+            line-height: 1.8;
         }
-        li {
+        
+        /* How It Works */
+        .how-it-works {
+            padding: 80px 20px;
+            background: white;
+        }
+        
+        .steps {
+            max-width: 1000px;
+            margin: 60px auto 0;
+            display: grid;
+            gap: 40px;
+        }
+        
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 16px;
+            transition: all 0.3s;
+        }
+        
+        .step:hover {
+            background: #e9ecef;
+            transform: translateX(10px);
+        }
+        
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #1e3a5f 0%, #3d6fa8 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        
+        .step-content h3 {
+            color: #1e3a5f;
+            margin-bottom: 10px;
+            font-size: 1.3em;
+        }
+        
+        .step-content p {
+            color: #666;
+        }
+        
+        /* Social Proof */
+        .social-proof {
+            padding: 60px 20px;
+            background: linear-gradient(135deg, #1e3a5f 0%, #3d6fa8 100%);
+            color: white;
+            text-align: center;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 80px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+        
+        .stat {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 3em;
+            font-weight: 800;
+            display: block;
             margin-bottom: 10px;
         }
-        .contact-info {
+        
+        .stat-label {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        /* CTA Section */
+        .final-cta {
+            padding: 80px 20px;
+            text-align: center;
             background: #f8f9fa;
-            padding: 20px;
-            border-radius: 8px;
-            margin-top: 30px;
-            border-left: 4px solid #3d6fa8;
         }
-        .last-updated {
-            text-align: center;
+        
+        .final-cta h2 {
+            font-size: 2.5em;
+            color: #1e3a5f;
+            margin-bottom: 20px;
+        }
+        
+        .final-cta p {
+            font-size: 1.2em;
             color: #666;
-            margin-top: 40px;
-            font-size: 0.9em;
+            margin-bottom: 40px;
         }
+        
+        /* Footer */
         footer {
+            background: #1e3a5f;
+            color: white;
+            padding: 40px 20px;
             text-align: center;
-            margin-top: 60px;
-            padding: 30px 0;
-            color: #666;
-            border-top: 1px solid #ddd;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+        
+        .footer-links a:hover {
+            opacity: 1;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5em;
+            }
+            
+            .hero .tagline {
+                font-size: 1.2em;
+            }
+            
+            .cta-button {
+                display: block;
+                margin: 10px auto;
+                max-width: 300px;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .step {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .stats {
+                gap: 40px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>Founder Events</h1>
-            <p>Privacy Policy & Terms of Service</p>
-        </header>
-        
-        <div class="nav-links">
-            <a href="index.html">Home</a>
-            <a href="privacy.html">Privacy Policy</a>
-            <a href="terms.html">Terms of Service</a>
-        </div>
-        
-        <div class="content">
-            <h2>Welcome</h2>
-            <p>Thank you for using Founder Events! This page provides access to our Privacy Policy and Terms of Service.</p>
-            
-            <h3>Privacy Policy</h3>
-            <p>Our Privacy Policy explains how we collect, use, and protect your information when you use Founder Events. We are committed to protecting your privacy and being transparent about our data practices.</p>
-            <p><a href="privacy.html" style="color: #3d6fa8; font-weight: 600;">Read our Privacy Policy →</a></p>
-            
-            <h3>Terms of Service</h3>
-            <p>Our Terms of Service outline the rules and regulations for using Founder Events. By using our app, you agree to these terms.</p>
-            <p><a href="terms.html" style="color: #3d6fa8; font-weight: 600;">Read our Terms of Service →</a></p>
-            
-            <div class="contact-info">
-                <h3>Contact Us</h3>
-                <p>If you have any questions about our Privacy Policy or Terms of Service, please contact us:</p>
-                <p><strong>Email:</strong> <a href="mailto:support@founderevents.app" style="color: #3d6fa8;">support@founderevents.app</a></p>
-                <p><strong>GitHub:</strong> <a href="https://github.com/Xavierhuang/FounderEvents" style="color: #3d6fa8;">github.com/Xavierhuang/FounderEvents</a></p>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>📅 Founder Events</h1>
+            <p class="tagline">Never Miss a NYC Tech Event Again</p>
+            <p style="font-size: 1.1em; margin-bottom: 40px; opacity: 0.9;">Discover founder meetups, investor dinners, and tech conferences—all in one place</p>
+            <div>
+                <a href="#download" class="cta-button">Download Now</a>
+                <a href="#features" class="cta-button cta-secondary">Learn More</a>
             </div>
         </div>
-        
-        <footer>
-            <p>&copy; 2025 Founder Events. All rights reserved.</p>
-            <p class="last-updated">Last Updated: November 2025</p>
-        </footer>
-    </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="features-container">
+            <h2 class="section-title">Why Founder Events?</h2>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🔍</div>
+                    <h3>Discover Events</h3>
+                    <p>Curated feed of founder events, investor meetups, and tech conferences from Gary's Guide and top sources</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">📲</div>
+                    <h3>One-Tap Calendar</h3>
+                    <p>Add events to your calendar instantly. Auto-sync with Apple Calendar and Google Calendar</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🤝</div>
+                    <h3>LinkedIn Connect</h3>
+                    <p>Save LinkedIn profiles from events. Build your founder network effortlessly</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🗺️</div>
+                    <h3>Smart Route Planning</h3>
+                    <p>AI-powered route optimization for multiple events. Never miss back-to-back meetings</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🔥</div>
+                    <h3>Popular Events</h3>
+                    <p>See what's trending in the NYC founder community. Get notified about hot events</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">📤</div>
+                    <h3>Easy Sharing</h3>
+                    <p>Share your schedule with co-founders, investors, and teammates via ICS, email, or link</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="how-it-works">
+        <h2 class="section-title">How It Works</h2>
+        <div class="steps">
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h3>Browse Events</h3>
+                    <p>Explore curated founder events from Gary's Guide, Luma, and other top sources—all in one feed</p>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h3>Add to Calendar</h3>
+                    <p>Tap "Add to Calendar" and the event syncs instantly to your iPhone calendar</p>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h3>Connect & Network</h3>
+                    <p>Save LinkedIn profiles from people you meet. Send personalized messages later</p>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                    <h3>Plan Your Route</h3>
+                    <p>AI route planner optimizes travel time between multiple events on the same day</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Social Proof -->
+    <section class="social-proof">
+        <h2 class="section-title" style="color: white;">Join NYC Founders</h2>
+        <div class="stats">
+            <div class="stat">
+                <span class="stat-number">50+</span>
+                <span class="stat-label">Daily Events</span>
+            </div>
+            <div class="stat">
+                <span class="stat-number">1000+</span>
+                <span class="stat-label">Founder Events</span>
+            </div>
+            <div class="stat">
+                <span class="stat-number">NYC</span>
+                <span class="stat-label">Tech Hub</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section class="final-cta" id="download">
+        <h2>Ready to Network Smarter?</h2>
+        <p>Download Founder Events and never miss an opportunity to connect</p>
+        <a href="https://apps.apple.com/app/founder-events" class="cta-button">Download on the App Store</a>
+        <p style="margin-top: 30px; color: #999; font-size: 0.9em;">Available for iPhone and iPad • iOS 15+</p>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-links">
+            <a href="terms.html">Terms of Service</a>
+            <a href="privacy.html">Privacy Policy</a>
+            <a href="https://github.com/Xavierhuang/ScheduleShare">GitHub</a>
+            <a href="mailto:support@founderevents.app">Contact</a>
+        </div>
+        <p style="opacity: 0.8; margin-top: 20px;">&copy; 2025 Founder Events. All rights reserved.</p>
+    </footer>
 </body>
 </html>
-

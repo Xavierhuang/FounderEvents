@@ -4,27 +4,13 @@ struct DiscoverView: View {
     @StateObject private var garysGuideService = GarysGuideService()
     @ObservedObject var appState: AppState
     @State private var selectedEventType = "All Events"
+    @State private var isShareSheetPresented = false
+    @State private var shareText = ""
+    @State private var isPreparingShare = false
+    @State private var showNoEventsAlert = false
     
     var filteredEvents: [GarysGuideEvent] {
-        var events = garysGuideService.events
-        
-        // Filter by event type only
-        if selectedEventType != "All Events" {
-            events = events.filter { event in
-                switch selectedEventType {
-                case "Popular Events":
-                    return event.isPopularEvent
-                case "Free Events":
-                    return event.price == "Free"
-                case "Paid Events":
-                    return event.price != "Free"
-                default:
-                    return true
-                }
-            }
-        }
-        
-        return events
+        return garysGuideService.eventsByType(selectedEventType)
     }
     
     private var headerView: some View {
@@ -32,7 +18,7 @@ struct DiscoverView: View {
             // Event type filter
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 16) {
-                    ForEach(["All Events", "Popular Events", "Free Events", "Paid Events"], id: \.self) { type in
+                    ForEach(garysGuideService.eventTypes, id: \.self) { type in
                         FilterChip(
                             title: type,
                             isSelected: selectedEventType == type
@@ -56,31 +42,124 @@ struct DiscoverView: View {
     
     private var eventsListView: some View {
         Group {
-            if garysGuideService.isLoading {
-                LoadingView()
-            } else if let errorMessage = garysGuideService.errorMessage, garysGuideService.events.isEmpty {
-                ErrorStateView(errorMessage: errorMessage) {
-                    garysGuideService.forceLoadFreshEvents()
+            if selectedEventType == "Popular Events" {
+                if garysGuideService.isFetchingPopular {
+                    LoadingView()
+                } else if garysGuideService.popularEvents.isEmpty {
+                    EmptyStateView()
+                } else {
+                    eventsScrollView(events: garysGuideService.popularEvents)
                 }
-            } else if filteredEvents.isEmpty {
-                EmptyStateView()
             } else {
-                ScrollView {
-                    LazyVStack(spacing: 16) {
-                        ForEach(filteredEvents) { event in
-                            SimpleEventCard(event: event, appState: appState)
-                        }
+                if garysGuideService.isLoading {
+                    LoadingView()
+                } else if let errorMessage = garysGuideService.errorMessage, garysGuideService.events.isEmpty {
+                    ErrorStateView(errorMessage: errorMessage) {
+                        garysGuideService.forceLoadFreshEvents()
                     }
-                    .padding(.horizontal, 20)
-                    .padding(.top, 8)
-                }
-                .scrollIndicators(.hidden)
-                .refreshable {
-                    // Pull to refresh functionality
-                    garysGuideService.refreshEvents()
+                } else if filteredEvents.isEmpty {
+                    EmptyStateView()
+                } else {
+                    eventsScrollView(events: filteredEvents)
                 }
             }
         }
+    }
+    
+    private func eventsScrollView(events: [GarysGuideEvent]) -> some View {
+        ScrollView {
+            LazyVStack(spacing: 16) {
+                ForEach(events) { event in
+                    SimpleEventCard(event: event, appState: appState)
+                }
+            }
+            .padding(.horizontal, 20)
+            .padding(.top, 8)
+        }
+        .scrollIndicators(.hidden)
+        .refreshable {
+            garysGuideService.refreshEvents()
+        }
+    }
+    
+    private func handleShareAction() {
+        isPreparingShare = true
+        
+        // Check if events are still loading
+        if garysGuideService.isLoading || (selectedEventType == "Popular Events" && garysGuideService.isFetchingPopular) {
+            // Wait for events to load with retries
+            waitForEventsAndShare(maxRetries: 5, currentRetry: 0)
+        } else {
+            // Events should be ready, but add small delay to ensure state is stable
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                prepareAndShowShare()
+            }
+        }
+    }
+    
+    private func waitForEventsAndShare(maxRetries: Int, currentRetry: Int) {
+        // Check if events are loaded
+        let isLoading = garysGuideService.isLoading || (selectedEventType == "Popular Events" && garysGuideService.isFetchingPopular)
+        let hasEvents = !filteredEvents.isEmpty || (selectedEventType == "Popular Events" && !garysGuideService.popularEvents.isEmpty)
+        
+        if !isLoading && hasEvents {
+            // Events are loaded, proceed with sharing
+            prepareAndShowShare()
+        } else if currentRetry < maxRetries {
+            // Still loading, wait a bit and retry
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                waitForEventsAndShare(maxRetries: maxRetries, currentRetry: currentRetry + 1)
+            }
+        } else {
+            // Max retries reached, try to share anyway (might be empty)
+            isPreparingShare = false
+            prepareAndShowShare()
+        }
+    }
+    
+    private func prepareAndShowShare() {
+        let eventsToShare: [GarysGuideEvent]
+        if selectedEventType == "Popular Events" {
+            eventsToShare = garysGuideService.popularEvents.isEmpty ? filteredEvents : garysGuideService.popularEvents
+        } else {
+            eventsToShare = filteredEvents
+        }
+        
+        guard !eventsToShare.isEmpty else {
+            isPreparingShare = false
+            // Show alert instead of empty share sheet
+            print("⚠️ No events available to share")
+            showNoEventsAlert = true
+            return
+        }
+        
+        shareText = prepareShareText(from: eventsToShare)
+        isPreparingShare = false
+        
+        // Small delay to ensure shareText is set before showing sheet
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            isShareSheetPresented = true
+        }
+    }
+    
+    private func prepareShareText(from eventsToShare: [GarysGuideEvent]) -> String {
+        guard !eventsToShare.isEmpty else {
+            return "No events available to share right now."
+        }
+        
+        let header = "Founder Events – \(selectedEventType)\n"
+        let body = eventsToShare.map { event -> String in
+            var lines: [String] = []
+            lines.append("• \(event.title)")
+            lines.append("  \(event.displayDate)")
+            if !event.venue.isEmpty {
+                lines.append("  \(event.displayVenue)")
+            }
+            lines.append("  \(event.url)")
+            return lines.joined(separator: "\n")
+        }.joined(separator: "\n\n")
+        
+        return header + "\n" + body
     }
     
     private var networkOverlay: some View {
@@ -139,11 +218,20 @@ struct DiscoverView: View {
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: {
-                        garysGuideService.forceLoadFreshEvents()
-                    }) {
-                        Image(systemName: "arrow.clockwise")
-                            .foregroundColor(.founderAccent)
+                    HStack(spacing: 16) {
+                        Button(action: {
+                            handleShareAction()
+                        }) {
+                            Image(systemName: "square.and.arrow.up")
+                                .foregroundColor(.founderAccent)
+                        }
+                        .disabled(isPreparingShare)
+                        Button(action: {
+                            garysGuideService.forceLoadFreshEvents()
+                        }) {
+                            Image(systemName: "arrow.clockwise")
+                                .foregroundColor(.founderAccent)
+                        }
                     }
                 }
             }
@@ -161,7 +249,24 @@ struct DiscoverView: View {
                 print("   - filtered events count: \(filteredEvents.count)")
             }
             .overlay(networkOverlay)
+            .sheet(isPresented: $isShareSheetPresented) {
+                if !shareText.isEmpty {
+                    ActivityView(activityItems: [shareText])
+                } else {
+                    // Fallback view if shareText is empty
+                    VStack {
+                        Text("Preparing content...")
+                            .padding()
+                    }
+                }
+            }
+            .alert("No Events to Share", isPresented: $showNoEventsAlert) {
+                Button("OK", role: .cancel) { }
+            } message: {
+                Text("There are no events available to share right now. Please wait for events to load or try refreshing.")
+            }
         }
+        .navigationViewStyle(.stack)
     }
 }
 
@@ -174,26 +279,27 @@ struct SimpleEventCard: View {
     @State private var calendarAlertMessage = ""
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
+        VStack(alignment: .leading, spacing: 12) {
             // Header with title and badges
-            HStack(alignment: .top) {
+            HStack(alignment: .top, spacing: 12) {
                 Text(event.title)
                     .font(.title3)
                     .fontWeight(.bold)
                     .foregroundColor(.primary)
                     .lineLimit(3)
                     .multilineTextAlignment(.leading)
+                    .fixedSize(horizontal: false, vertical: true)
                 
-                Spacer()
+                Spacer(minLength: 8)
                 
                 // Event type badge
                 if event.isPopularEvent {
-                    Text("🔥 Popular")
+                    Text("Popular")
                         .font(.caption)
                         .fontWeight(.bold)
                         .foregroundColor(.white)
                         .padding(.horizontal, 10)
-                        .padding(.vertical, 6)
+                        .padding(.vertical, 5)
                         .background(
                             LinearGradient(
                                 gradient: Gradient(colors: [Color.orange, Color.red]),
@@ -201,17 +307,18 @@ struct SimpleEventCard: View {
                                 endPoint: .bottomTrailing
                             )
                         )
-                        .cornerRadius(12)
+                        .cornerRadius(8)
                         .shadow(color: Color.orange.opacity(0.3), radius: 2, x: 0, y: 1)
                 }
             }
             
-            // Date and time
-            HStack {
-                HStack(spacing: 8) {
+            // Date and time with price badge
+            HStack(alignment: .center, spacing: 12) {
+                HStack(alignment: .center, spacing: 6) {
                     Image(systemName: "calendar")
                         .foregroundColor(.founderAccent)
-                        .font(.subheadline)
+                        .font(.system(size: 14, weight: .medium))
+                        .frame(width: 16, height: 16)
                     
                     Text(event.displayDate)
                         .font(.subheadline)
@@ -221,32 +328,33 @@ struct SimpleEventCard: View {
                 
                 Spacer()
                 
-                // Price
+                // Price badge - aligned to center
                 Text(event.displayPrice)
-                    .font(.subheadline)
-                    .fontWeight(.bold)
+                    .font(.caption)
+                    .fontWeight(.semibold)
                     .foregroundColor(event.price == "Free" ? .founderSuccess : .founderWarning)
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 6)
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 5)
                     .background(
-                        RoundedRectangle(cornerRadius: 8)
+                        RoundedRectangle(cornerRadius: 6)
                             .fill(event.price == "Free" ? 
                                   Color.founderSuccess.opacity(0.15) : 
                                   Color.founderWarning.opacity(0.15)
                             )
                     )
                     .overlay(
-                        RoundedRectangle(cornerRadius: 8)
+                        RoundedRectangle(cornerRadius: 6)
                             .stroke(event.price == "Free" ? Color.founderSuccess.opacity(0.3) : Color.founderWarning.opacity(0.3), lineWidth: 1)
                     )
             }
             
-            // Venue
-            if !event.displayVenue.isEmpty {
-                HStack(spacing: 8) {
-                    Image(systemName: "location")
-                        .foregroundColor(.founderPrimary)
-                        .font(.subheadline)
+            // Venue - only show if not TBD
+            if !event.displayVenue.isEmpty && !event.displayVenue.contains("TBD") {
+                HStack(alignment: .center, spacing: 6) {
+                    Image(systemName: "mappin.circle.fill")
+                        .foregroundColor(.founderAccent)
+                        .font(.system(size: 14, weight: .medium))
+                        .frame(width: 16, height: 16)
                     
                     Text(event.displayVenue)
                         .font(.subheadline)
@@ -264,7 +372,7 @@ struct SimpleEventCard: View {
                 }) {
                     HStack(spacing: 6) {
                         Image(systemName: "calendar.badge.plus")
-                            .font(.subheadline)
+                            .font(.system(size: 14, weight: .medium))
                         Text("Add to Calendar")
                             .font(.subheadline)
                             .fontWeight(.semibold)
@@ -272,6 +380,7 @@ struct SimpleEventCard: View {
                     .foregroundColor(.white)
                     .padding(.horizontal, 16)
                     .padding(.vertical, 10)
+                    .frame(maxWidth: .infinity)
                     .background(
                         LinearGradient(
                             gradient: Gradient(colors: [Color.founderAccent, Color.founderAccent.opacity(0.8)]),
@@ -284,8 +393,6 @@ struct SimpleEventCard: View {
                 }
                 .buttonStyle(PlainButtonStyle())
                 
-                Spacer()
-                
                 // View Details button
                 Button(action: {
                     openEventURL()
@@ -297,11 +404,12 @@ struct SimpleEventCard: View {
                             .foregroundColor(.founderAccent)
                         
                         Image(systemName: "arrow.right")
-                            .font(.subheadline)
+                            .font(.system(size: 14, weight: .medium))
                             .foregroundColor(.founderAccent)
                     }
                     .padding(.horizontal, 16)
                     .padding(.vertical, 10)
+                    .frame(maxWidth: .infinity)
                     .background(
                         RoundedRectangle(cornerRadius: 12)
                             .fill(Color.founderAccent.opacity(0.1))
@@ -312,10 +420,9 @@ struct SimpleEventCard: View {
                     )
                 }
                 .buttonStyle(PlainButtonStyle())
-                
             }
         }
-        .padding(20)
+        .padding(16)
         .background(
             RoundedRectangle(cornerRadius: 16)
                 .fill(Color(.systemBackground))
@@ -385,7 +492,8 @@ struct SimpleEventCard: View {
     }
     
     private func parseEventDateTime(date: String, time: String) -> Date? {
-        print("🔍 parseEventDateTime called with date: '\(date)', time: '\(time)'")
+        let normalizedTime = GarysGuideEvent.normalizeTime(time)
+        print("🔍 parseEventDateTime called with date: '\(date)', time: '\(normalizedTime)'")
         
         // Get current year
         let currentYear = Calendar.current.component(.year, from: Date())
@@ -429,29 +537,45 @@ struct SimpleEventCard: View {
         print("📅 Final event date: \(adjustedEventDate)")
         
         // Parse the time - try different formats
-        let timeFormats = ["h:mm a", "h:mma", "HH:mm", "h:mm"]
-        var eventTime: Date?
+        let timeFormats = ["h:mm a", "HH:mm"]
+        var parsedTimeComponents: DateComponents?
         
         for format in timeFormats {
             let timeFormatter = DateFormatter()
             timeFormatter.dateFormat = format
-            timeFormatter.locale = Locale(identifier: "en_US")
+            timeFormatter.locale = Locale(identifier: "en_US_POSIX")
             
-            if let parsedTime = timeFormatter.date(from: time) {
-                eventTime = parsedTime
-                print("⏰ Parsed time with format '\(format)': \(parsedTime)")
+            if let parsedTime = timeFormatter.date(from: normalizedTime) {
+                parsedTimeComponents = calendar.dateComponents([.hour, .minute], from: parsedTime)
+                print("⏰ Parsed time with format '\(format)': \(normalizedTime)")
                 break
             }
         }
         
-        guard let eventTime = eventTime else {
-            print("❌ Failed to parse time: \(time)")
+        if parsedTimeComponents == nil {
+            let upper = normalizedTime.uppercased()
+            if upper == "TBD" || upper == "ALL DAY" || upper.isEmpty {
+                parsedTimeComponents = DateComponents(hour: 12, minute: 0)
+                print("⏰ Time unspecified, defaulting to 12:00 PM")
+            } else if let match = normalizedTime.range(of: #"(\d{1,2}):(\d{2})\s*([AP]M)"#, options: .regularExpression) {
+                let matched = String(normalizedTime[match])
+                let formatter = DateFormatter()
+                formatter.dateFormat = "h:mm a"
+                formatter.locale = Locale(identifier: "en_US_POSIX")
+                if let parsedTime = formatter.date(from: matched) {
+                    parsedTimeComponents = calendar.dateComponents([.hour, .minute], from: parsedTime)
+                    print("⏰ Parsed time via regex fallback: \(matched)")
+                }
+            }
+        }
+        
+        guard let timeComponents = parsedTimeComponents else {
+            print("❌ Failed to parse time: \(normalizedTime)")
             return nil
         }
         
         // Combine date and time
         let dateComponents = calendar.dateComponents([.year, .month, .day], from: adjustedEventDate)
-        let timeComponents = calendar.dateComponents([.hour, .minute], from: eventTime)
         
         var combinedComponents = DateComponents()
         combinedComponents.year = dateComponents.year
@@ -539,6 +663,44 @@ struct SimpleEventCard: View {
         } else {
             return "View Details"
         }
+    }
+}
+
+// MARK: - ActivityView
+struct ActivityView: UIViewControllerRepresentable {
+    let activityItems: [Any]
+    let applicationActivities: [UIActivity]? = nil
+    
+    func makeUIViewController(context: Context) -> UIActivityViewController {
+        let activityVC = UIActivityViewController(activityItems: activityItems, applicationActivities: applicationActivities)
+        
+        // Configure for iPad
+        if let popover = activityVC.popoverPresentationController {
+            // Use window scene for iOS 15+
+            if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+               let window = windowScene.windows.first {
+                popover.sourceView = window.rootViewController?.view
+                popover.sourceRect = CGRect(x: window.bounds.width / 2, y: window.bounds.height / 2, width: 0, height: 0)
+                popover.permittedArrowDirections = []
+            }
+        }
+        
+        // Add completion handler to ensure proper cleanup
+        activityVC.completionWithItemsHandler = { (activityType, completed, returnedItems, error) in
+            if let error = error {
+                print("❌ Share error: \(error.localizedDescription)")
+            } else if completed {
+                print("✅ Share completed successfully")
+            }
+        }
+        
+        return activityVC
+    }
+    
+    func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {
+        // Update activity items if they change
+        // Note: UIActivityViewController doesn't support updating items after creation,
+        // so we rely on SwiftUI to recreate the view controller when activityItems change
     }
 }
 

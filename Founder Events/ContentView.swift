@@ -14,11 +14,11 @@ struct ContentView: View {
     
     var body: some View {
         TabView(selection: $selectedTab) {
-            DiscoverView(appState: appState)
+            EnhancedDiscoverView()
                 .environmentObject(appState)
                 .tabItem {
                     Image(systemName: "sparkles")
-                    Text("Founder Events")
+                    Text("Discover")
                 }
                 .tag(0)
             
@@ -30,6 +30,14 @@ struct ContentView: View {
                     Text("Calendar")
                 }
                 .tag(1)
+            
+            MyPublicEventsView()
+                .environmentObject(appState)
+                .tabItem {
+                    Image(systemName: "calendar.badge.checkmark")
+                    Text("My Events")
+                }
+                .tag(2)
 
             LinkedInProfilesView()
                 .environmentObject(appState)
@@ -37,16 +45,15 @@ struct ContentView: View {
                     Image(systemName: "person.2.fill")
                     Text("Connections")
                 }
-                .tag(2)
+                .tag(3)
             
-            SettingsView()
+            ProfileView()
                 .environmentObject(appState)
-                .environmentObject(calendarManager)
                 .tabItem {
                     Image(systemName: "person.circle.fill")
-                    Text("Me")
+                    Text("Profile")
                 }
-                .tag(3)
+                .tag(4)
         }
         .accentColor(.founderAccent)
         .preferredColorScheme(.light)
@@ -334,6 +341,7 @@ struct SettingsView: View {
                 .environmentObject(appState)
                 .environmentObject(calendarManager)
         }
+        .navigationViewStyle(.stack)
     }
     
     private func exportEvents(_ method: SharingMethod) {
@@ -417,6 +425,7 @@ struct AboutView: View {
                 presentationMode.wrappedValue.dismiss()
             })
         }
+        .navigationViewStyle(.stack)
     }
 }
 

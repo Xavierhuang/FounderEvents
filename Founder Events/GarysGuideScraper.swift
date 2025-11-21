@@ -10,7 +10,7 @@ class GarysGuideScraper: ObservableObject {
     
     private let garysGuideURL = "https://www.garysguide.com/events"
     
-    func fetchEvents() {
+    func fetchEvents(limit: Int? = nil, completion: (([GarysGuideEvent]) -> Void)? = nil) {
         isLoading = true
         errorMessage = nil
         
@@ -25,11 +25,12 @@ class GarysGuideScraper: ObservableObject {
                     self?.errorMessage = "Cannot reach Gary's Guide. Please check your internet connection."
                     self?.events = []
                 }
+                completion?([])
                 return
             }
             
             // If we can reach it, proceed with the actual request
-            self?.performActualRequest()
+            self?.performActualRequest(limit: limit, completion: completion)
         }
     }
     
@@ -59,7 +60,7 @@ class GarysGuideScraper: ObservableObject {
         task.resume()
     }
     
-    private func performActualRequest() {
+    private func performActualRequest(limit: Int?, completion: (([GarysGuideEvent]) -> Void)?) {
         
         guard let url = URL(string: garysGuideURL) else {
             print("❌ Invalid URL")
@@ -149,14 +150,14 @@ class GarysGuideScraper: ObservableObject {
                 }
                 
                 print("✅ Successfully fetched HTML from Gary's Guide")
-                self?.parseEventsFromHTML(htmlString)
+                self?.parseEventsFromHTML(htmlString, limit: limit, completion: completion)
             }
         }
         
         task.resume()
     }
     
-    private func parseEventsFromHTML(_ html: String) {
+    private func parseEventsFromHTML(_ html: String, limit: Int?, completion: (([GarysGuideEvent]) -> Void)?) {
         print("🔍 Parsing events from HTML...")
         
         // Debug: Print a sample of the HTML to see the structure
@@ -166,6 +167,10 @@ class GarysGuideScraper: ObservableObject {
         print("📄 End of sample HTML")
         
         var parsedEvents: [GarysGuideEvent] = []
+        
+        // Detect popular event URLs from dedicated section
+        let popularEventURLs = extractPopularEventURLs(from: html)
+        print("🔥 Identified \(popularEventURLs.count) events inside Popular/Featured sections")
         
         // Extract event titles from the URL path
         let titlePattern = #"alt='([^']+)' href='https://www\.garysguide\.com/events/[^']*"#
@@ -301,7 +306,9 @@ class GarysGuideScraper: ObservableObject {
         
         print("🔄 Processing \(minCount) events...")
         
-        for i in 0..<minCount {
+        let cappedCount = limit.map { min($0, minCount) } ?? minCount
+        
+        for i in 0..<cappedCount {
             group.enter()
             
             let urlTitle = extractString(from: html, range: titleMatches[i].range(at: 1))
@@ -309,6 +316,7 @@ class GarysGuideScraper: ObservableObject {
             let date = extractString(from: html, range: dateMatches[i].range(at: 1))
             let time = extractString(from: html, range: timeMatches[i].range(at: 1))
             let eventUrl = extractString(from: html, range: urlMatches[i].range(at: 1))
+            let normalizedEventUrl = GarysGuideScraper.normalizeEventURL(eventUrl)
             
             // Debug: Print extracted date and time
             print("🔍 Extracted - Date: '\(date)', Time: '\(time)' for event: \(title)")
@@ -339,11 +347,15 @@ class GarysGuideScraper: ObservableObject {
             // Determine week based on date
             let week = determineWeek(from: date)
             
-            // Check if it's a popular event by looking for specific indicators around this event
-            let isPopularEvent = checkIfPopularEvent(title: title, html: html, eventIndex: i)
+            // Check if this event lives inside the Popular Events section or has badges
+            var isPopularEvent = popularEventURLs.contains(normalizedEventUrl)
+            
+            if !isPopularEvent {
+                isPopularEvent = checkIfPopularEvent(title: title, html: html, eventIndex: i)
+            }
             
             // Create event with original URL first, then try to get redirect
-            let event = GarysGuideEvent(
+                let event = GarysGuideEvent(
                 title: title,
                 date: date,
                 time: time,
@@ -352,7 +364,7 @@ class GarysGuideScraper: ObservableObject {
                 speakers: speakers,
                 url: eventUrl, // Use original Gary's Guide URL as fallback
                 isGaryEvent: false,
-                isPopularEvent: isPopularEvent,
+                    isPopularEvent: isPopularEvent,
                 week: week
             )
             
@@ -420,9 +432,37 @@ class GarysGuideScraper: ObservableObject {
                 
                 print("✅ Successfully parsed \(validEvents.count) real events from Gary's Guide")
                 self?.events = validEvents
+                completion?(validEvents)
             }
             self?.isLoading = false
         }
+    }
+    
+    func fetchPopularEventURLs(completion: @escaping (Set<String>) -> Void) {
+        guard let url = URL(string: garysGuideURL) else {
+            completion([])
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.timeoutInterval = 15.0
+        request.setValue("Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.0 Mobile/15E148 Safari/604.1", forHTTPHeaderField: "User-Agent")
+        request.setValue("text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8", forHTTPHeaderField: "Accept")
+        
+        let task = URLSession.shared.dataTask(with: request) { [weak self] data, _, error in
+            guard error == nil,
+                  let data = data,
+                  let html = String(data: data, encoding: .utf8),
+                  let self = self else {
+                completion([])
+                return
+            }
+            
+            let urls = self.extractPopularEventURLs(from: html)
+            completion(urls)
+        }
+        
+        task.resume()
     }
     
     private func fetchRedirectURL(from eventUrl: String, completion: @escaping (String?) -> Void) {
@@ -670,7 +710,8 @@ class GarysGuideScraper: ObservableObject {
         }
         
         private static func parseEventDateTime(date: String, time: String) -> Date? {
-            print("🔍 parseEventDateTime called with date: '\(date)', time: '\(time)'")
+            let normalizedTime = GarysGuideEvent.normalizeTime(time)
+            print("🔍 parseEventDateTime called with date: '\(date)', time: '\(normalizedTime)'")
             
             // Get current year
             let currentYear = Calendar.current.component(.year, from: Date())
@@ -714,29 +755,45 @@ class GarysGuideScraper: ObservableObject {
             print("📅 Final event date: \(adjustedEventDate)")
             
             // Parse the time - try different formats
-            let timeFormats = ["h:mm a", "h:mma", "HH:mm", "h:mm"]
-            var eventTime: Date?
+            let timeFormats = ["h:mm a", "HH:mm"]
+            var parsedTimeComponents: DateComponents?
             
             for format in timeFormats {
                 let timeFormatter = DateFormatter()
                 timeFormatter.dateFormat = format
-                timeFormatter.locale = Locale(identifier: "en_US")
+                timeFormatter.locale = Locale(identifier: "en_US_POSIX")
                 
-                if let parsedTime = timeFormatter.date(from: time) {
-                    eventTime = parsedTime
-                    print("⏰ Parsed time with format '\(format)': \(parsedTime)")
+                if let parsedTime = timeFormatter.date(from: normalizedTime) {
+                    parsedTimeComponents = calendar.dateComponents([.hour, .minute], from: parsedTime)
+                    print("⏰ Parsed time with format '\(format)': \(normalizedTime)")
                     break
                 }
             }
             
-            guard let eventTime = eventTime else {
-                print("❌ Failed to parse time: \(time)")
+            if parsedTimeComponents == nil {
+                let upper = normalizedTime.uppercased()
+                if upper == "TBD" || upper == "ALL DAY" || upper.isEmpty {
+                    parsedTimeComponents = DateComponents(hour: 12, minute: 0)
+                    print("⏰ Time unspecified, defaulting to 12:00 PM")
+                } else if let match = normalizedTime.range(of: #"(\d{1,2}):(\d{2})\s*([AP]M)"#, options: .regularExpression) {
+                    let matched = String(normalizedTime[match])
+                    let formatter = DateFormatter()
+                    formatter.dateFormat = "h:mm a"
+                    formatter.locale = Locale(identifier: "en_US_POSIX")
+                    if let parsedTime = formatter.date(from: matched) {
+                        parsedTimeComponents = calendar.dateComponents([.hour, .minute], from: parsedTime)
+                        print("⏰ Parsed time via regex fallback: \(matched)")
+                    }
+                }
+            }
+            
+            guard let timeComponents = parsedTimeComponents else {
+                print("❌ Failed to parse time: \(normalizedTime)")
                 return nil
             }
             
             // Combine date and time
             let dateComponents = calendar.dateComponents([.year, .month, .day], from: adjustedEventDate)
-            let timeComponents = calendar.dateComponents([.hour, .minute], from: eventTime)
             
             var combinedComponents = DateComponents()
             combinedComponents.year = dateComponents.year
@@ -805,5 +862,35 @@ class GarysGuideScraper: ObservableObject {
         
         // Default: not a popular event
         return false
+    }
+    
+    private func extractPopularEventURLs(from html: String) -> Set<String> {
+        var urls = Set<String>()
+        
+        let pattern = #"<font[^>]*class=['"]fboxtitle['"][^>]*>(?:POPULAR|FEATURED|HOT)\s+EVENTS?</font>(.*?)<font[^>]*class=['"]fboxtitle"# // capture block between section headers
+        if let regex = try? NSRegularExpression(pattern: pattern, options: [.dotMatchesLineSeparators, .caseInsensitive]) {
+            let range = NSRange(location: 0, length: html.utf16.count)
+            if let match = regex.firstMatch(in: html, options: [], range: range), match.numberOfRanges > 1 {
+                let block = self.extractString(from: html, range: match.range(at: 1))
+                let eventPattern = #"href=['"](https://www\.garysguide\.com/events/[^'"]+)['"]"#
+                if let eventRegex = try? NSRegularExpression(pattern: eventPattern, options: []) {
+                    let blockRange = NSRange(location: 0, length: block.utf16.count)
+                    let matches = eventRegex.matches(in: block, options: [], range: blockRange)
+                    for m in matches {
+                        let url = self.extractString(from: block, range: m.range(at: 1))
+                        urls.insert(GarysGuideScraper.normalizeEventURL(url))
+                    }
+                }
+            }
+        }
+        
+        return urls
+    }
+    
+    static func normalizeEventURL(_ url: String) -> String {
+        guard var components = URLComponents(string: url) else { return url }
+        components.query = nil
+        components.fragment = nil
+        return components.string ?? url
     }
 }

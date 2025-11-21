@@ -153,7 +153,7 @@ export default function LandingPage() {
                   <div className="w-8 h-8 bg-gradient-to-br from-primary-600 to-primary-400 rounded-lg flex items-center justify-center">
                     <CalendarDaysIcon className="h-5 w-5 text-white" />
                   </div>
-                  <span className="ml-2 text-xl font-bold text-gray-900">ScheduleShare</span>
+                  <span className="ml-2 text-xl font-bold text-gray-900">FoundersEvents</span>
                 </div>
               </div>
             </div>
@@ -420,7 +420,7 @@ export default function LandingPage() {
                 <div className="w-8 h-8 bg-gradient-to-br from-primary-600 to-primary-400 rounded-lg flex items-center justify-center">
                   <CalendarDaysIcon className="h-5 w-5 text-white" />
                 </div>
-                <span className="ml-2 text-xl font-bold text-white">ScheduleShare</span>
+                <span className="ml-2 text-xl font-bold text-white">FoundersEvents</span>
               </div>
               <p className="text-gray-400 mb-4">
                 Smart calendar management powered by AI. Extract events, discover networking opportunities, 

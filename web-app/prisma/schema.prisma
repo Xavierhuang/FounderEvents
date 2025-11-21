@@ -6,8 +6,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
+  relationMode = "prisma"
 }
 
 model User {
@@ -23,11 +24,18 @@ model User {
   accounts Account[]
   sessions Session[]
 
-  // ScheduleShare data
+  // ScheduleShare data (private)
   events            CalendarEvent[]
   linkedInProfiles  LinkedInProfile[]
   messageTemplates  MessageTemplate[]
   routePlans        RoutePlan[]
+  
+  // Public event platform
+  profile           UserProfile?
+  organizedEvents   PublicEvent[]     @relation("EventOrganizer")
+  eventRegistrations EventRegistration[]
+  eventComments     EventComment[]
+  eventLikes        EventLike[]
   
   // Settings
   preferences       UserPreferences?
@@ -230,6 +238,197 @@ model CalendarSettings {
   updatedAt               DateTime @updatedAt
 
   @@map("calendar_settings")
+}
+
+// Public Event Platform Models
+
+model UserProfile {
+  id          String   @id @default(cuid())
+  username    String   @unique
+  displayName String
+  bio         String?  @db.Text
+  avatar      String?
+  coverImage  String?
+  
+  // Social links
+  website     String?
+  twitter     String?
+  linkedin    String?
+  instagram   String?
+  
+  // Stats
+  totalEvents Int      @default(0)
+  totalAttendees Int   @default(0)
+  
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("user_profiles")
+}
+
+model PublicEvent {
+  id              String    @id @default(cuid())
+  slug            String    @unique
+  title           String
+  description     String    @db.Text
+  shortDescription String?
+  
+  // Event details
+  startDate       DateTime
+  endDate         DateTime
+  timezone        String    @default("America/New_York")
+  
+  // Location
+  locationType    String    // PHYSICAL, VIRTUAL, HYBRID
+  venueName       String?
+  venueAddress    String?
+  venueCity       String?
+  venueState      String?
+  venueZipCode    String?
+  virtualLink     String?
+  
+  // Media
+  coverImage      String?
+  images          Json?     // Array of image URLs
+  
+  // Registration
+  isPublic        Boolean   @default(true)
+  requiresApproval Boolean  @default(false)
+  capacity        Int?
+  registrationDeadline DateTime?
+  price           Float     @default(0)
+  currency        String    @default("USD")
+  
+  // Status
+  status          String    @default("DRAFT") // DRAFT, PUBLISHED, CANCELLED, COMPLETED
+  visibility      String    @default("PUBLIC") // PUBLIC, PRIVATE, UNLISTED
+  isFeatured      Boolean   @default(false)
+  
+  // SEO
+  metaTitle       String?
+  metaDescription String?
+  tags            Json?     @default("[]")
+  
+  // Stats
+  viewCount       Int       @default(0)
+  registrationCount Int     @default(0)
+  likeCount       Int       @default(0)
+  shareCount      Int       @default(0)
+  
+  // Relationships
+  organizerId     String
+  organizer       User      @relation("EventOrganizer", fields: [organizerId], references: [id], onDelete: Cascade)
+  
+  categories      EventCategory[]
+  registrations   EventRegistration[]
+  comments        EventComment[]
+  likes           EventLike[]
+  
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  publishedAt     DateTime?
+
+  @@index([slug])
+  @@index([organizerId])
+  @@index([status])
+  @@index([startDate])
+  @@map("public_events")
+}
+
+model EventCategory {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  slug        String   @unique
+  description String?
+  icon        String?
+  color       String?
+  
+  events      PublicEvent[]
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("event_categories")
+}
+
+model EventRegistration {
+  id              String    @id @default(cuid())
+  
+  // Attendee info
+  firstName       String
+  lastName        String
+  email           String
+  
+  // Registration details
+  status          String    @default("CONFIRMED") // PENDING, CONFIRMED, CANCELLED, WAITLIST
+  ticketType      String?
+  quantity        Int       @default(1)
+  totalAmount     Float     @default(0)
+  
+  // Payment
+  paymentStatus   String?   // PENDING, PAID, REFUNDED
+  paymentId       String?
+  
+  // Check-in
+  checkedIn       Boolean   @default(false)
+  checkedInAt     DateTime?
+  
+  // Relationships
+  userId          String?
+  user            User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+  eventId         String
+  event           PublicEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@unique([eventId, email])
+  @@index([eventId])
+  @@index([userId])
+  @@index([email])
+  @@map("event_registrations")
+}
+
+model EventComment {
+  id          String    @id @default(cuid())
+  content     String    @db.Text
+  
+  // Relationships
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  eventId     String
+  event       PublicEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  
+  // Threading
+  parentId    String?
+  parent      EventComment?  @relation("CommentReplies", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  replies     EventComment[] @relation("CommentReplies")
+  
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([eventId])
+  @@index([userId])
+  @@map("event_comments")
+}
+
+model EventLike {
+  id          String    @id @default(cuid())
+  
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  eventId     String
+  event       PublicEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  
+  createdAt   DateTime  @default(now())
+
+  @@unique([userId, eventId])
+  @@index([eventId])
+  @@index([userId])
+  @@map("event_likes")
 }
 
 // Enums (stored as strings in the database)

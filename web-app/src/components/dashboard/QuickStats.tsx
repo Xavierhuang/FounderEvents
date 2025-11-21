@@ -5,7 +5,7 @@ import {
   CalendarDaysIcon, 
   UserGroupIcon, 
   ClockIcon,
-  TrendingUpIcon
+  ArrowTrendingUpIcon
 } from '@heroicons/react/24/outline';
 import { format, isToday, isTomorrow, addDays, isWithinInterval } from 'date-fns';
 
@@ -48,7 +48,7 @@ export default function QuickStats({ events }: QuickStatsProps) {
     {
       name: 'This Week',
       value: stats.thisWeek,
-      icon: TrendingUpIcon,
+      icon: ArrowTrendingUpIcon,
       color: 'text-purple-600',
       bgColor: 'bg-purple-100',
       description: 'Next 7 days',

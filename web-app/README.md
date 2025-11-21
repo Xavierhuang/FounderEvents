@@ -251,6 +251,26 @@ npm run lint
 - **Error Tracking** with built-in error boundaries
 - **Database Monitoring** via Prisma metrics
 
+## ⚠️ Known Limitations
+
+### Payment Processing
+- Events can have a price
+- Registration form accepts it
+- **But:** No payment integration (Stripe, PayPal, etc.)
+- **Impact:** Paid events will register users without collecting payment
+- **Recommendation:** Add payment gateway before charging for events
+
+### Email Notifications
+- No confirmation emails sent
+- No reminder emails
+- **Recommendation:** Add email service (SendGrid, Resend, etc.)
+
+### Event Editing
+- ✅ **NOW IMPLEMENTED** - Full event editing UI with form
+- ✅ Edit button in My Events page
+- ✅ PUT API endpoint works perfectly
+- ✅ Pre-fills all event data for editing
+
 ## 🤝 Contributing
 
 We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.

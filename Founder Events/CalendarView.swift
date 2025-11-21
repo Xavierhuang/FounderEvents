@@ -314,6 +314,7 @@ struct CalendarView: View {
             // Refresh when selected date changes
             print("📅 Selected date changed to: \(dateFormatter.string(from: selectedDate))")
         }
+        .navigationViewStyle(.stack)
     }
     
     // MARK: - Private Methods

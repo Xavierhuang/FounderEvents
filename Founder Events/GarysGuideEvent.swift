@@ -30,7 +30,7 @@ struct GarysGuideEvent: Identifiable, Codable, Equatable {
         // Format date from ISO format (2025-11-17) to readable format (Nov 17)
         self.date = Self.formatDate(dto.date)
         
-        self.time = dto.time.isEmpty ? "TBD" : dto.time
+        self.time = Self.normalizeTime(dto.time)
         self.price = "Free" // Default, can be extracted from notes if needed
         self.venue = dto.address.isEmpty ? "Location TBD" : dto.address
         self.speakers = "" // Can be extracted from notes if needed
@@ -110,12 +110,69 @@ struct GarysGuideEvent: Identifiable, Codable, Equatable {
         return outputFormatter.string(from: date).uppercased()
     }
     
+    static func normalizeTime(_ rawTime: String) -> String {
+        var value = rawTime.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !value.isEmpty else { return "TBD" }
+        
+        let separators = ["–", "—", "-", " to ", " TO ", "–", "—", " until ", "|"]
+        for separator in separators {
+            if let range = value.range(of: separator) {
+                value = String(value[..<range.lowerBound])
+                break
+            }
+        }
+        
+        value = value.trimmingCharacters(in: .whitespacesAndNewlines)
+        if value.isEmpty { return "TBD" }
+        
+        let parser = DateFormatter()
+        parser.locale = Locale(identifier: "en_US_POSIX")
+        let output = DateFormatter()
+        output.locale = Locale(identifier: "en_US_POSIX")
+        output.dateFormat = "h:mm a"
+        
+        let dateFormats = [
+            "MMM dd, yyyy h:mm a",
+            "MMM d, yyyy h:mm a",
+            "MMM dd yyyy h:mm a",
+            "MMM d yyyy h:mm a",
+            "M/d/yyyy h:mm a",
+            "yyyy-MM-dd h:mm a"
+        ]
+        
+        for format in dateFormats {
+            parser.dateFormat = format
+            if let date = parser.date(from: value) {
+                return output.string(from: date)
+            }
+        }
+        
+        let compact = value.replacingOccurrences(of: " ", with: "").uppercased()
+        parser.dateFormat = "h:mma"
+        if let date = parser.date(from: compact) {
+            return output.string(from: date)
+        }
+        
+        if let regex = try? NSRegularExpression(pattern: #"(\d{1,2}:\d{2})\s*([APap][mM])"#, options: []) {
+            let range = NSRange(location: 0, length: value.utf16.count)
+            if let match = regex.firstMatch(in: value, options: [], range: range),
+               let timeRange = Range(match.range(at: 1), in: value),
+               let ampmRange = Range(match.range(at: 2), in: value) {
+                let timePart = String(value[timeRange])
+                let ampmPart = String(value[ampmRange]).uppercased()
+                return "\(timePart) \(ampmPart)"
+            }
+        }
+        
+        return value
+    }
+    
     // Original initializer for compatibility
     init(id: String = UUID().uuidString, title: String, date: String, time: String, price: String, venue: String, speakers: String, url: String, isGaryEvent: Bool, isPopularEvent: Bool, week: String) {
         self.id = id
         self.title = title
         self.date = date
-        self.time = time
+        self.time = GarysGuideEvent.normalizeTime(time)
         self.price = price
         self.venue = venue
         self.speakers = speakers
@@ -124,6 +181,7 @@ struct GarysGuideEvent: Identifiable, Codable, Equatable {
         self.isPopularEvent = isPopularEvent
         self.week = week
     }
+    
     
     // Computed properties for display
     var displayDate: String {
@@ -161,13 +219,33 @@ struct GarysGuideEvent: Identifiable, Codable, Equatable {
             return .gray
         }
     }
+    
+    func withPopularFlag(_ flag: Bool) -> GarysGuideEvent {
+        return GarysGuideEvent(
+            id: id,
+            title: title,
+            date: date,
+            time: time,
+            price: price,
+            venue: venue,
+            speakers: speakers,
+            url: url,
+            isGaryEvent: isGaryEvent,
+            isPopularEvent: flag,
+            week: week
+        )
+    }
 }
 
 // MARK: - Founder Events Service
 class GarysGuideService: ObservableObject {
     @Published var events: [GarysGuideEvent] = []
+    @Published var popularEvents: [GarysGuideEvent] = []
     @Published var isLoading = false
     @Published var errorMessage: String?
+    @Published var isFetchingPopular = false
+    
+    private let popularScraper = GarysGuideScraper()
     
     init() {
         loadEvents()
@@ -189,6 +267,10 @@ class GarysGuideService: ObservableObject {
                     self.errorMessage = nil
                     print("✅ Loaded \(self.events.count) events from Founder Events API")
                 }
+                
+                await MainActor.run {
+                    self.loadPopularEventsFromScraper()
+                }
             } catch {
                 await MainActor.run {
                     self.isLoading = false
@@ -200,6 +282,20 @@ class GarysGuideService: ObservableObject {
                         self.loadFallbackEvents()
                     }
                 }
+            }
+        }
+    }
+    
+    private func loadPopularEventsFromScraper() {
+        print("🔥 Fetching dedicated Popular Events from Gary's Guide...")
+        isFetchingPopular = true
+        popularScraper.fetchEvents(limit: 50) { [weak self] scraped in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                self.isFetchingPopular = false
+                let popularList = scraped.prefix(50).map { $0.withPopularFlag(true) }
+                self.popularEvents = Array(popularList)
+                print("✅ Loaded \(self.popularEvents.count) popular events directly from Gary's Guide")
             }
         }
     }
@@ -436,6 +532,7 @@ class GarysGuideService: ObservableObject {
             self.events = fallbackEvents
             self.isLoading = false
             print("✅ Loaded \(fallbackEvents.count) current NYC tech events")
+            self.loadPopularEventsFromScraper()
         }
     }
     
@@ -476,11 +573,10 @@ class GarysGuideService: ObservableObject {
     func eventsByType(_ type: String) -> [GarysGuideEvent] {
         switch type {
         case "Popular Events":
+            if !popularEvents.isEmpty {
+                return popularEvents
+            }
             return events.filter { $0.isPopularEvent }
-        case "Free Events":
-            return events.filter { $0.price == "Free" }
-        case "Paid Events":
-            return events.filter { $0.price != "Free" }
         default:
             return events
         }
@@ -493,6 +589,6 @@ class GarysGuideService: ObservableObject {
     
     // Get event types for filtering
     var eventTypes: [String] {
-        return ["All Events", "Popular Events", "Free Events", "Paid Events"]
+        return ["All Events", "Popular Events"]
     }
 } 

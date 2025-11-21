@@ -166,7 +166,7 @@ export interface EventFilters {
   };
   search?: string;
   location?: string;
-  eventType?: 'all' | 'popular' | 'free' | 'paid';
+  eventType?: 'all' | 'popular' | 'featured';
 }
 
 // AI types

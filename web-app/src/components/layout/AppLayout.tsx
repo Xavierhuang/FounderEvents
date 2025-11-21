@@ -12,16 +12,19 @@ import {
   UserCircleIcon,
   Bars3Icon,
   XMarkIcon,
-  ArrowRightOnRectangleIcon
+  ArrowRightOnRectangleIcon,
+  LinkIcon
 } from '@heroicons/react/24/outline';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: CalendarDaysIcon },
-  { name: 'Discover', href: '/dashboard/discover', icon: SparklesIcon },
-  { name: 'Add Event', href: '/dashboard/events/create', icon: PlusIcon },
+  { name: 'My Events', href: '/dashboard/my-events', icon: CalendarDaysIcon },
   { name: 'Calendar', href: '/dashboard/calendar', icon: CalendarDaysIcon },
+  { name: 'Discover', href: '/dashboard/discover', icon: SparklesIcon },
+  { name: 'Create Event', href: '/dashboard/events/create-manual', icon: PlusIcon },
+  { name: 'Import Event', href: '/dashboard/events/import', icon: LinkIcon },
   { name: 'Connections', href: '/dashboard/connections', icon: UserGroupIcon },
 ];
 
@@ -69,7 +72,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                     <div className="w-8 h-8 bg-gradient-to-br from-primary-600 to-primary-400 rounded-lg flex items-center justify-center">
                       <CalendarDaysIcon className="h-5 w-5 text-white" />
                     </div>
-                    <span className="ml-2 text-xl font-bold text-gray-900">ScheduleShare</span>
+                    <span className="ml-2 text-xl font-bold text-gray-900">FoundersEvents</span>
                   </div>
                   <button
                     onClick={() => setSidebarOpen(false)}
@@ -115,7 +118,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
             <div className="w-8 h-8 bg-gradient-to-br from-primary-600 to-primary-400 rounded-lg flex items-center justify-center">
               <CalendarDaysIcon className="h-5 w-5 text-white" />
             </div>
-            <span className="ml-2 text-xl font-bold text-gray-900">ScheduleShare</span>
+            <span className="ml-2 text-xl font-bold text-gray-900">FoundersEvents</span>
           </div>
           <nav className="flex flex-1 flex-col">
             <ul role="list" className="flex flex-1 flex-col gap-y-7">
@@ -209,11 +212,17 @@ export default function AppLayout({ children }: AppLayoutProps) {
                   onClick={() => setUserMenuOpen(!userMenuOpen)}
                 >
                   <span className="sr-only">Open user menu</span>
-                  <img
-                    className="h-8 w-8 rounded-full bg-gray-50"
-                    src={session?.user?.image || '/default-avatar.png'}
-                    alt=""
-                  />
+                  {session?.user?.image ? (
+                    <img
+                      className="h-8 w-8 rounded-full bg-gray-50 object-cover"
+                      src={session.user.image}
+                      alt={session.user.name || 'User avatar'}
+                    />
+                  ) : (
+                    <div className="h-8 w-8 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center text-white font-semibold text-sm">
+                      {session?.user?.name?.charAt(0).toUpperCase() || 'U'}
+                    </div>
+                  )}
                   <span className="hidden lg:flex lg:items-center">
                     <span className="ml-4 text-sm font-semibold leading-6 text-gray-900">
                       {session?.user?.name}

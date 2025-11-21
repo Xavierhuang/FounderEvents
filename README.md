@@ -31,6 +31,18 @@ ScheduleShare is a revolutionary iOS app that transforms how you manage and shar
 - **Multiple Formats**: Share via email, messages, or calendar links
 - **iCal Support**: Generate .ics files for easy calendar import
 
+### 🔥 Gary's Guide Popular Event Scraper
+- **Python scraper** located in `scripts/garysguide_scraper.py`
+- **Fetch real NYC tech events** directly from [Gary's Guide](https://www.garysguide.com/events)
+- **Popular Event detection** via HTML section markers & badges
+- **Export to JSON** for use in the iOS app or web dashboard
+- **Usage examples**:
+  ```bash
+  python scripts/garysguide_scraper.py --limit 25 --export data/events.json
+  python scripts/garysguide_scraper.py --popular-only --export data/popular.json
+  ```
+  > Requires `requests`, `beautifulsoup4`, and `python-dateutil`.
+
 ### 🎨 Modern UI/UX
 - **Beautiful Design**: Clean, modern interface with purple accent theme
 - **Smooth Animations**: Polished transitions and loading indicators

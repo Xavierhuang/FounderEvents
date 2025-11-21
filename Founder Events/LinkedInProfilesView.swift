@@ -53,6 +53,7 @@ struct LinkedInProfilesView: View {
                 }
             }
         }
+        .navigationViewStyle(.stack)
     }
     
     private var headerSection: some View {
