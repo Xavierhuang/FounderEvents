@@ -50,11 +50,15 @@
 
   /* Button variants */
   .btn-primary {
-    @apply inline-flex items-center justify-center rounded-lg bg-primary-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors;
+    @apply inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors;
+    background-color: #25004D;
+  }
+  .btn-primary:hover {
+    background-color: #3d1a6d;
   }
 
   .btn-secondary {
-    @apply inline-flex items-center justify-center rounded-lg bg-white px-4 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors;
+    @apply inline-flex items-center justify-center rounded-lg bg-white/70 backdrop-blur-sm px-4 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-white/50 hover:bg-white/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors;
   }
 
   .btn-ghost {
@@ -65,22 +69,22 @@
     @apply inline-flex items-center justify-center rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors;
   }
 
-  /* Card styles */
+  /* Card styles - Glassmorphic */
   .card {
-    @apply bg-white rounded-xl shadow-sm border border-gray-200;
+    @apply bg-white/40 backdrop-blur-xl rounded-2xl shadow-lg border border-white/50;
   }
 
   .card-hover {
-    @apply card hover:shadow-md hover:border-gray-300 transition-all duration-200;
+    @apply card hover:shadow-xl hover:bg-white/50 transition-all duration-200;
   }
 
-  /* Input styles */
+  /* Input styles - Glassmorphic */
   .input-field {
-    @apply block w-full rounded-lg border-0 py-2 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-600 sm:text-sm sm:leading-6;
+    @apply block w-full rounded-xl border-0 py-2.5 px-4 text-gray-900 bg-white/70 backdrop-blur-sm shadow-sm ring-1 ring-inset ring-white/50 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-500 sm:text-sm sm:leading-6;
   }
 
   .input {
-    @apply block w-full rounded-lg border-0 py-2 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-600 sm:text-sm sm:leading-6;
+    @apply block w-full rounded-xl border-0 py-2.5 px-4 text-gray-900 bg-white/70 backdrop-blur-sm shadow-sm ring-1 ring-inset ring-white/50 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-500 sm:text-sm sm:leading-6;
   }
 
   /* Badge styles */
@@ -141,12 +145,13 @@
 
   /* Loading spinner */
   .spinner {
-    @apply animate-spin rounded-full border-2 border-gray-200 border-t-primary-600;
+    @apply animate-spin rounded-full border-2 border-gray-200;
+    border-top-color: #25004D;
   }
 
   /* Gradient backgrounds */
   .gradient-primary {
-    background: linear-gradient(135deg, rgb(124, 26, 255) 0%, rgb(159, 117, 255) 100%);
+    background: linear-gradient(135deg, #25004D 0%, #3d1a6d 100%);
   }
 
   .gradient-secondary {
@@ -160,7 +165,7 @@
 
   /* Glass effect */
   .glass {
-    @apply bg-white/70 backdrop-blur-sm border border-white/20;
+    @apply bg-white/40 backdrop-blur-xl border border-white/50 shadow-lg;
   }
 
   /* Dark mode utilities (for future implementation) */
@@ -184,11 +189,20 @@
   }
 
   .calendar-day-today {
-    @apply calendar-day bg-primary-600 text-white hover:bg-primary-500;
+    @apply calendar-day text-white;
+    background-color: #25004D;
+  }
+  .calendar-day-today:hover {
+    background-color: #3d1a6d;
   }
 
   .calendar-day-selected {
-    @apply calendar-day bg-primary-100 text-primary-800 hover:bg-primary-200;
+    @apply calendar-day;
+    background-color: rgba(37, 0, 77, 0.1);
+    color: #25004D;
+  }
+  .calendar-day-selected:hover {
+    background-color: rgba(37, 0, 77, 0.2);
   }
 
   .calendar-day-other-month {
@@ -201,30 +215,34 @@
 
   .calendar-day-has-events::after {
     content: '';
-    @apply absolute bottom-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-primary-600 rounded-full;
+    @apply absolute bottom-1 left-1/2 transform -translate-x-1/2 w-1 h-1 rounded-full;
+    background-color: #25004D;
   }
 
   /* Event card styles */
   .event-card {
-    @apply card p-4 hover:shadow-md transition-all duration-200 cursor-pointer;
+    @apply card p-4 hover:shadow-xl hover:bg-white/50 transition-all duration-200 cursor-pointer;
   }
 
   .event-card-selected {
-    @apply event-card ring-2 ring-primary-500 border-primary-300;
+    @apply event-card ring-2;
+    --tw-ring-color: #25004D;
+    border-color: rgba(37, 0, 77, 0.3);
   }
 
   /* LinkedIn profile card styles */
   .profile-card {
-    @apply card p-6 hover:shadow-lg transition-all duration-200;
+    @apply card p-6 hover:shadow-xl hover:bg-white/50 transition-all duration-200;
   }
 
   .profile-avatar {
-    @apply w-12 h-12 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center text-white font-bold text-lg;
+    @apply w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-lg;
+    background: linear-gradient(to bottom right, #3d1a6d, #25004D);
   }
 
   /* Route planning styles */
   .route-segment {
-    @apply flex items-center space-x-4 p-4 bg-white rounded-lg border border-gray-200;
+    @apply flex items-center space-x-4 p-4 bg-white/40 backdrop-blur-xl rounded-xl border border-white/50;
   }
 
   .transport-icon {
@@ -257,7 +275,7 @@
 
   /* Discovery page styles */
   .discover-event-card {
-    @apply card p-6 hover:shadow-lg hover:scale-[1.02] transition-all duration-200;
+    @apply card p-6 hover:shadow-xl hover:bg-white/50 hover:scale-[1.02] transition-all duration-200;
   }
 
   .popular-badge {
@@ -283,24 +301,25 @@
 
   /* Tab styles */
   .tab-list {
-    @apply flex space-x-1 rounded-lg bg-gray-100 p-1;
+    @apply flex space-x-1 rounded-xl bg-white/30 backdrop-blur-sm p-1 border border-white/30;
   }
 
   .tab-button {
-    @apply flex-1 rounded-md py-2 px-3 text-sm font-medium text-gray-600 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition-all;
+    @apply flex-1 rounded-lg py-2 px-3 text-sm font-medium text-gray-600 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition-all;
   }
 
   .tab-button-active {
-    @apply tab-button bg-white text-primary-600 shadow-sm;
+    @apply tab-button bg-white/70 backdrop-blur-sm shadow-sm;
+    color: #25004D;
   }
 
   /* Dropdown menu styles */
   .dropdown-menu {
-    @apply absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none;
+    @apply absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-xl bg-white/80 backdrop-blur-xl shadow-lg ring-1 ring-white/50 focus:outline-none;
   }
 
   .dropdown-item {
-    @apply block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors;
+    @apply block px-4 py-2 text-sm text-gray-700 hover:bg-white/50 hover:text-gray-900 transition-colors;
   }
 
   /* Toast notification styles */

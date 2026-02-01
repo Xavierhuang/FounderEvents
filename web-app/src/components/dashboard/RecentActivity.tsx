@@ -68,7 +68,7 @@ export default function RecentActivity() {
       description: 'From Gary\'s Guide NYC tech events',
       timestamp: new Date(Date.now() - 1000 * 60 * 60 * 4), // 4 hours ago
       icon: SparklesIcon,
-      color: 'text-purple-600',
+      color: 'text-[#25004D]',
     },
     {
       id: '4',
@@ -84,12 +84,12 @@ export default function RecentActivity() {
   const displayActivities = activities.length > 0 ? activities : mockActivities;
 
   return (
-    <div className="card p-6">
+    <div className="bg-white/40 backdrop-blur-xl rounded-2xl border border-white/50 p-6 shadow-lg shadow-[#25004D]/10">
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-lg font-semibold text-gray-900">Recent Activity</h3>
         <a
           href="/dashboard/activity"
-          className="text-sm font-medium text-primary-600 hover:text-primary-500"
+          className="text-sm font-medium text-[#25004D] hover:text-[#3d1a6d]"
         >
           View all
         </a>
@@ -99,10 +99,10 @@ export default function RecentActivity() {
         <div className="space-y-4">
           {[...Array(4)].map((_, i) => (
             <div key={i} className="animate-pulse flex items-start space-x-3">
-              <div className="w-8 h-8 bg-gray-200 rounded-full"></div>
+              <div className="w-8 h-8 bg-[#25004D]/10 rounded-xl"></div>
               <div className="flex-1 space-y-2">
-                <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-                <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+                <div className="h-4 bg-[#25004D]/10 rounded w-3/4"></div>
+                <div className="h-3 bg-[#25004D]/10 rounded w-1/2"></div>
               </div>
             </div>
           ))}
@@ -117,14 +117,14 @@ export default function RecentActivity() {
                   <div className="relative pb-8">
                     {activityIdx !== displayActivities.length - 1 ? (
                       <span
-                        className="absolute left-4 top-4 -ml-px h-full w-0.5 bg-gray-200"
+                        className="absolute left-4 top-4 -ml-px h-full w-0.5 bg-[#25004D]/10"
                         aria-hidden="true"
                       />
                     ) : null}
                     <div className="relative flex items-start space-x-3">
                       <div>
                         <div className={`relative px-1`}>
-                          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 ring-8 ring-white">
+                          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#25004D]/10 ring-4 ring-white">
                             <Icon className={`h-4 w-4 ${activity.color}`} aria-hidden="true" />
                           </div>
                         </div>
@@ -140,7 +140,7 @@ export default function RecentActivity() {
                             {formatDistanceToNow(activity.timestamp, { addSuffix: true })}
                           </p>
                         </div>
-                        <div className="mt-2 text-sm text-gray-700">
+                        <div className="mt-2 text-sm text-gray-600">
                           <p>{activity.description}</p>
                         </div>
                       </div>

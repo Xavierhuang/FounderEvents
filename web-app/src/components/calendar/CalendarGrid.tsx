@@ -71,13 +71,13 @@ export default function CalendarGrid({
           <div className="flex space-x-2">
             <button
               onClick={handlePrevMonth}
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              className="p-2 hover:bg-white/50 rounded-lg transition-colors"
             >
               <ChevronLeftIcon className="h-5 w-5" />
             </button>
             <button
               onClick={handleNextMonth}
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              className="p-2 hover:bg-white/50 rounded-lg transition-colors"
             >
               <ChevronRightIcon className="h-5 w-5" />
             </button>
@@ -91,11 +91,11 @@ export default function CalendarGrid({
     const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     
     return (
-      <div className="grid grid-cols-7 gap-px bg-gray-200 rounded-t-lg overflow-hidden">
+      <div className="grid grid-cols-7 gap-px bg-[#25004D]/10 rounded-t-xl overflow-hidden">
         {days.map(day => (
           <div
             key={day}
-            className="bg-gray-50 py-3 text-center text-sm font-semibold text-gray-700"
+            className="bg-white/30 backdrop-blur-sm py-3 text-center text-sm font-semibold text-gray-700"
           >
             {day}
           </div>
@@ -121,10 +121,10 @@ export default function CalendarGrid({
           <div
             key={currentDay.toString()}
             className={`
-              min-h-[120px] bg-white p-2 border-r border-b cursor-pointer
-              ${!isCurrentMonth ? 'bg-gray-50' : ''}
-              ${isSelected ? 'ring-2 ring-primary-500' : ''}
-              hover:bg-gray-50 transition-colors
+              min-h-[120px] bg-white/40 backdrop-blur-sm p-2 border-r border-b border-white/30 cursor-pointer
+              ${!isCurrentMonth ? 'bg-white/20' : ''}
+              ${isSelected ? 'ring-2 ring-[#25004D]' : ''}
+              hover:bg-white/60 transition-colors
             `}
             onClick={() => onDateSelect && onDateSelect(currentDay)}
           >
@@ -133,7 +133,7 @@ export default function CalendarGrid({
                 className={`
                   text-sm font-medium
                   ${!isCurrentMonth ? 'text-gray-400' : 'text-gray-900'}
-                  ${isTodayDate ? 'bg-primary-600 text-white rounded-full w-7 h-7 flex items-center justify-center' : ''}
+                  ${isTodayDate ? 'bg-[#25004D] text-white rounded-full w-7 h-7 flex items-center justify-center' : ''}
                 `}
               >
                 {format(currentDay, 'd')}
@@ -152,7 +152,7 @@ export default function CalendarGrid({
                     e.stopPropagation();
                     onEventClick && onEventClick(event);
                   }}
-                  className="text-xs p-1 bg-primary-100 text-primary-800 rounded truncate hover:bg-primary-200 transition-colors"
+                  className="text-xs p-1 bg-[#25004D]/10 text-[#25004D] rounded truncate hover:bg-[#25004D]/20 transition-colors"
                 >
                   {format(new Date(event.startDate), 'h:mm a')} - {event.title}
                 </div>
@@ -168,18 +168,18 @@ export default function CalendarGrid({
         day = addDays(day, 1);
       }
       rows.push(
-        <div key={day.toString()} className="grid grid-cols-7 gap-px bg-gray-200">
+        <div key={day.toString()} className="grid grid-cols-7 gap-px bg-[#25004D]/10">
           {days}
         </div>
       );
       days = [];
     }
 
-    return <div className="border-l border-gray-200 rounded-b-lg overflow-hidden">{rows}</div>;
+    return <div className="border-l border-white/30 rounded-b-xl overflow-hidden">{rows}</div>;
   };
 
   return (
-    <div className="bg-white rounded-lg p-6">
+    <div className="bg-white/40 backdrop-blur-xl rounded-2xl border border-white/50 p-6 shadow-lg">
       {renderHeader()}
       {renderDays()}
       {renderCells()}

@@ -2,10 +2,10 @@
 
 import { CalendarEvent } from '@/types';
 import { 
-  CalendarDaysIcon, 
-  UserGroupIcon, 
-  ClockIcon,
-  ArrowTrendingUpIcon
+  Square3Stack3DIcon,
+  SunIcon,
+  ChartBarIcon,
+  RocketLaunchIcon
 } from '@heroicons/react/24/outline';
 import { format, isToday, isTomorrow, addDays, isWithinInterval } from 'date-fns';
 
@@ -32,63 +32,68 @@ export default function QuickStats({ events }: QuickStatsProps) {
     {
       name: 'Total Events',
       value: stats.total,
-      icon: CalendarDaysIcon,
-      color: 'text-blue-600',
-      bgColor: 'bg-blue-100',
+      icon: Square3Stack3DIcon,
+      iconBg: 'bg-[#25004D]/10',
+      iconColor: 'text-[#25004D]',
+      borderColor: 'border-[#25004D]/20',
       description: 'All time',
     },
     {
       name: 'Today',
       value: stats.today,
-      icon: ClockIcon,
-      color: 'text-green-600',
-      bgColor: 'bg-green-100',
+      icon: SunIcon,
+      iconBg: 'bg-green-100',
+      iconColor: 'text-green-600',
+      borderColor: 'border-green-200',
       description: format(now, 'MMM dd'),
     },
     {
       name: 'This Week',
       value: stats.thisWeek,
-      icon: ArrowTrendingUpIcon,
-      color: 'text-purple-600',
-      bgColor: 'bg-purple-100',
+      icon: ChartBarIcon,
+      iconBg: 'bg-orange-100',
+      iconColor: 'text-orange-500',
+      borderColor: 'border-orange-200',
       description: 'Next 7 days',
     },
     {
       name: 'Upcoming',
       value: stats.upcoming,
-      icon: CalendarDaysIcon,
-      color: 'text-orange-600',
-      bgColor: 'bg-orange-100',
+      icon: RocketLaunchIcon,
+      iconBg: 'bg-amber-100',
+      iconColor: 'text-amber-600',
+      borderColor: 'border-amber-200',
       description: 'Future events',
     },
   ];
 
   return (
-    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
       {statCards.map((stat) => {
         const Icon = stat.icon;
         return (
-          <div key={stat.name} className="card p-6 hover:shadow-md transition-shadow">
+          <div 
+            key={stat.name} 
+            className="bg-white/40 backdrop-blur-xl rounded-2xl border border-white/50 p-5 shadow-lg shadow-[#25004D]/10 hover:bg-white/50 hover:shadow-xl transition-all duration-200"
+          >
             <div className="flex items-center">
               <div className="flex-shrink-0">
-                <div className={`inline-flex p-3 rounded-lg ${stat.bgColor}`}>
-                  <Icon className={`h-6 w-6 ${stat.color}`} />
+                <div className={`inline-flex p-3 rounded-xl ${stat.iconBg}`}>
+                  <Icon className={`h-6 w-6 ${stat.iconColor}`} />
                 </div>
               </div>
-              <div className="ml-4 w-0 flex-1">
-                <dl>
-                  <dt className="text-sm font-medium text-gray-500 truncate">
-                    {stat.name}
-                  </dt>
-                  <dd className="flex items-baseline">
-                    <div className="text-2xl font-semibold text-gray-900">
-                      {stat.value}
-                    </div>
-                    <div className="ml-2 text-sm text-gray-500">
-                      {stat.description}
-                    </div>
-                  </dd>
-                </dl>
+              <div className="ml-4 flex-1">
+                <p className="text-sm font-medium text-gray-500 truncate">
+                  {stat.name}
+                </p>
+                <div className="flex items-baseline mt-1">
+                  <span className="text-2xl font-bold text-gray-900">
+                    {stat.value}
+                  </span>
+                  <span className="ml-2 text-sm text-gray-400">
+                    {stat.description}
+                  </span>
+                </div>
               </div>
             </div>
           </div>

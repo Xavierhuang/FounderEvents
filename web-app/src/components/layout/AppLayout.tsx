@@ -3,29 +3,35 @@
 import { useState } from 'react';
 import { useSession, signOut } from 'next-auth/react';
 import { usePathname } from 'next/navigation';
+import { isAdmin } from '@/lib/admin';
 import { 
   CalendarDaysIcon, 
   UserGroupIcon, 
-  SparklesIcon,
   PlusIcon,
   Cog6ToothIcon,
   UserCircleIcon,
   Bars3Icon,
   XMarkIcon,
   ArrowRightOnRectangleIcon,
-  LinkIcon
+  LinkIcon,
+  ServerIcon,
+  HomeIcon,
+  RectangleStackIcon,
+  MagnifyingGlassIcon,
+  PlusCircleIcon
 } from '@heroicons/react/24/outline';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 
 const navigation = [
-  { name: 'Dashboard', href: '/dashboard', icon: CalendarDaysIcon },
-  { name: 'My Events', href: '/dashboard/my-events', icon: CalendarDaysIcon },
+  { name: 'Dashboard', href: '/dashboard', icon: HomeIcon },
+  { name: 'My Events', href: '/dashboard/my-events', icon: RectangleStackIcon },
   { name: 'Calendar', href: '/dashboard/calendar', icon: CalendarDaysIcon },
-  { name: 'Discover', href: '/dashboard/discover', icon: SparklesIcon },
-  { name: 'Create Event', href: '/dashboard/events/create-manual', icon: PlusIcon },
+  { name: 'Discover', href: '/dashboard/discover', icon: MagnifyingGlassIcon },
+  { name: 'Create Event', href: '/dashboard/events/create-manual', icon: PlusCircleIcon },
   { name: 'Import Event', href: '/dashboard/events/import', icon: LinkIcon },
   { name: 'Connections', href: '/dashboard/connections', icon: UserGroupIcon },
+  { name: 'Admin', href: '/dashboard/admin', icon: ServerIcon },
 ];
 
 const userNavigation = [
@@ -42,6 +48,16 @@ export default function AppLayout({ children }: AppLayoutProps) {
   const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+  
+  // Filter navigation based on admin status
+  const userIsAdmin = isAdmin(session?.user?.email);
+  const filteredNavigation = navigation.filter(item => {
+    // Hide Admin link for non-admins
+    if (item.name === 'Admin' && !userIsAdmin) {
+      return false;
+    }
+    return true;
+  });
 
   const handleSignOut = () => {
     signOut({ callbackUrl: '/' });
@@ -65,27 +81,32 @@ export default function AppLayout({ children }: AppLayoutProps) {
                 animate={{ x: 0 }}
                 exit={{ x: -300 }}
                 transition={{ type: "spring", bounce: 0, duration: 0.4 }}
-                className="fixed left-0 top-0 z-40 h-full w-72 bg-white shadow-xl"
+                className="fixed left-0 top-0 z-40 h-full w-72 shadow-xl"
+                style={{ background: '#250040' }}
               >
-                <div className="flex h-16 items-center justify-between px-6 border-b border-gray-200">
+                <div className="flex h-16 items-center justify-between px-6" style={{ borderBottom: '1px solid rgba(255,255,255,0.15)' }}>
                   <div className="flex items-center">
-                    <div className="w-8 h-8 bg-gradient-to-br from-primary-600 to-primary-400 rounded-lg flex items-center justify-center">
+                    <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: 'linear-gradient(to bottom right, #5a1ad6, #25004D)' }}>
                       <CalendarDaysIcon className="h-5 w-5 text-white" />
                     </div>
-                    <span className="ml-2 text-xl font-bold text-gray-900">FoundersEvents</span>
+                    <span className="ml-2 text-xl font-bold text-white">FoundersEvents</span>
                   </div>
                   <button
                     onClick={() => setSidebarOpen(false)}
-                    className="text-gray-400 hover:text-gray-600"
+                    className="hover:text-white"
+                    style={{ color: 'rgba(255,255,255,0.7)' }}
                   >
                     <XMarkIcon className="h-6 w-6" />
                   </button>
                 </div>
                 <nav className="px-6 py-6">
                   <ul className="space-y-2">
-                    {navigation.map((item) => {
+                    {filteredNavigation.map((item) => {
                       const Icon = item.icon;
-                      const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
+                      // For Dashboard, only match exact path; for others, match path or children
+                      const isActive = item.href === '/dashboard' 
+                        ? pathname === '/dashboard'
+                        : pathname === item.href || pathname.startsWith(item.href + '/');
                       return (
                         <li key={item.name}>
                           <Link
@@ -93,11 +114,12 @@ export default function AppLayout({ children }: AppLayoutProps) {
                             onClick={() => setSidebarOpen(false)}
                             className={`flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                               isActive
-                                ? 'bg-primary-100 text-primary-700'
-                                : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
+                                ? 'bg-white'
+                                : 'hover:bg-white/5 hover:text-white'
                             }`}
+                            style={{ color: isActive ? '#25004D' : 'rgba(255,255,255,0.7)' }}
                           >
-                            <Icon className="mr-3 h-5 w-5" />
+                            <Icon className="mr-3 h-5 w-5" style={{ color: isActive ? '#25004D' : undefined }} />
                             {item.name}
                           </Link>
                         </li>
@@ -113,34 +135,37 @@ export default function AppLayout({ children }: AppLayoutProps) {
 
       {/* Desktop sidebar */}
       <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
-        <div className="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6 py-6">
+        <div className="flex grow flex-col gap-y-5 overflow-y-auto px-6 py-6" style={{ background: '#25004D' }}>
           <div className="flex h-16 shrink-0 items-center">
-            <div className="w-8 h-8 bg-gradient-to-br from-primary-600 to-primary-400 rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: 'linear-gradient(to bottom right, #5a1ad6, #25004D)' }}>
               <CalendarDaysIcon className="h-5 w-5 text-white" />
             </div>
-            <span className="ml-2 text-xl font-bold text-gray-900">FoundersEvents</span>
+            <span className="ml-2 text-xl font-bold text-white">FoundersEvents</span>
           </div>
           <nav className="flex flex-1 flex-col">
             <ul role="list" className="flex flex-1 flex-col gap-y-7">
               <li>
                 <ul role="list" className="-mx-2 space-y-1">
-                  {navigation.map((item) => {
+                  {filteredNavigation.map((item) => {
                     const Icon = item.icon;
-                    const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
+                    // For Dashboard, only match exact path; for others, match path or children
+                    const isActive = item.href === '/dashboard' 
+                      ? pathname === '/dashboard'
+                      : pathname === item.href || pathname.startsWith(item.href + '/');
                     return (
                       <li key={item.name}>
                         <Link
                           href={item.href}
                           className={`group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold transition-colors ${
                             isActive
-                              ? 'bg-primary-50 text-primary-700'
-                              : 'text-gray-700 hover:text-primary-700 hover:bg-gray-50'
+                              ? 'bg-white'
+                              : 'hover:text-white hover:bg-white/5'
                           }`}
+                          style={{ color: isActive ? '#25004D' : 'rgba(255,255,255,0.7)' }}
                         >
                           <Icon
-                            className={`h-6 w-6 shrink-0 ${
-                              isActive ? 'text-primary-700' : 'text-gray-400 group-hover:text-primary-700'
-                            }`}
+                            className="h-6 w-6 shrink-0 group-hover:text-white"
+                            style={{ color: isActive ? '#25004D' : 'rgba(255,255,255,0.6)' }}
                           />
                           {item.name}
                         </Link>
@@ -150,7 +175,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                 </ul>
               </li>
               <li className="mt-auto">
-                <div className="border-t border-gray-200 pt-6">
+                <div className="pt-6" style={{ borderTop: '1px solid rgba(255,255,255,0.15)' }}>
                   <ul role="list" className="-mx-2 space-y-1">
                     {userNavigation.map((item) => {
                       const Icon = item.icon;
@@ -161,14 +186,14 @@ export default function AppLayout({ children }: AppLayoutProps) {
                             href={item.href}
                             className={`group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold transition-colors ${
                               isActive
-                                ? 'bg-primary-50 text-primary-700'
-                                : 'text-gray-700 hover:text-primary-700 hover:bg-gray-50'
+                                ? 'bg-white'
+                                : 'hover:text-white hover:bg-white/5'
                             }`}
+                            style={{ color: isActive ? '#25004D' : 'rgba(255,255,255,0.7)' }}
                           >
                             <Icon
-                              className={`h-6 w-6 shrink-0 ${
-                                isActive ? 'text-primary-700' : 'text-gray-400 group-hover:text-primary-700'
-                              }`}
+                              className="h-6 w-6 shrink-0 group-hover:text-white"
+                              style={{ color: isActive ? '#25004D' : 'rgba(255,255,255,0.6)' }}
                             />
                             {item.name}
                           </Link>
@@ -184,9 +209,9 @@ export default function AppLayout({ children }: AppLayoutProps) {
       </div>
 
       {/* Main content */}
-      <div className="lg:pl-72">
+      <div className="lg:pl-72 min-h-screen" style={{ backgroundImage: 'url(/purple-gradient-bg.png)', backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed' }}>
         {/* Top bar */}
-        <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
+        <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-white/20 bg-white/70 backdrop-blur-xl px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
           <button
             type="button"
             className="-m-2.5 p-2.5 text-gray-700 lg:hidden"
@@ -219,7 +244,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                       alt={session.user.name || 'User avatar'}
                     />
                   ) : (
-                    <div className="h-8 w-8 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center text-white font-semibold text-sm">
+                    <div className="h-8 w-8 rounded-full flex items-center justify-center text-white font-semibold text-sm" style={{ background: 'linear-gradient(to bottom right, #3d1a6d, #25004D)' }}>
                       {session?.user?.name?.charAt(0).toUpperCase() || 'U'}
                     </div>
                   )}
