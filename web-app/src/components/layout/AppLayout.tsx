@@ -112,14 +112,21 @@ export default function AppLayout({ children }: AppLayoutProps) {
                           <Link
                             href={item.href}
                             onClick={() => setSidebarOpen(false)}
-                            className={`flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                            className={`flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-all ${
                               isActive
-                                ? 'bg-white'
+                                ? 'text-white'
                                 : 'hover:bg-white/5 hover:text-white'
                             }`}
-                            style={{ color: isActive ? '#25004D' : 'rgba(255,255,255,0.7)' }}
+                            style={isActive ? {
+                              background: 'rgba(255, 255, 255, 0.45)',
+                              border: '2px solid rgba(255, 255, 255, 0.9)',
+                              boxShadow: '0 4px 15px rgba(45, 10, 78, 0.15), 0 2px 8px rgba(74, 20, 140, 0.12), 0 1px 3px rgba(157, 78, 221, 0.08)',
+                              backdropFilter: 'blur(30px) saturate(180%)',
+                              WebkitBackdropFilter: 'blur(30px) saturate(180%)',
+                              color: '#FFFFFF'
+                            } : { color: 'rgba(255,255,255,0.7)' }}
                           >
-                            <Icon className="mr-3 h-5 w-5" style={{ color: isActive ? '#25004D' : undefined }} />
+                            <Icon className="mr-3 h-5 w-5 text-white" />
                             {item.name}
                           </Link>
                         </li>
@@ -156,16 +163,22 @@ export default function AppLayout({ children }: AppLayoutProps) {
                       <li key={item.name}>
                         <Link
                           href={item.href}
-                          className={`group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold transition-colors ${
+                          className={`group flex gap-x-3 rounded-lg p-2 text-sm leading-6 font-semibold transition-all ${
                             isActive
-                              ? 'bg-white'
+                              ? 'text-white'
                               : 'hover:text-white hover:bg-white/5'
                           }`}
-                          style={{ color: isActive ? '#25004D' : 'rgba(255,255,255,0.7)' }}
+                          style={isActive ? {
+                            background: 'rgba(255, 255, 255, 0.45)',
+                            border: '2px solid rgba(255, 255, 255, 0.9)',
+                            boxShadow: '0 4px 15px rgba(45, 10, 78, 0.15), 0 2px 8px rgba(74, 20, 140, 0.12), 0 1px 3px rgba(157, 78, 221, 0.08)',
+                            backdropFilter: 'blur(30px) saturate(180%)',
+                            WebkitBackdropFilter: 'blur(30px) saturate(180%)',
+                            color: '#FFFFFF'
+                          } : { color: 'rgba(255,255,255,0.7)' }}
                         >
                           <Icon
-                            className="h-6 w-6 shrink-0 group-hover:text-white"
-                            style={{ color: isActive ? '#25004D' : 'rgba(255,255,255,0.6)' }}
+                            className="h-6 w-6 shrink-0 text-white group-hover:text-white"
                           />
                           {item.name}
                         </Link>
@@ -184,16 +197,22 @@ export default function AppLayout({ children }: AppLayoutProps) {
                         <li key={item.name}>
                           <Link
                             href={item.href}
-                            className={`group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold transition-colors ${
+                            className={`group flex gap-x-3 rounded-lg p-2 text-sm leading-6 font-semibold transition-all ${
                               isActive
-                                ? 'bg-white'
+                                ? 'text-white'
                                 : 'hover:text-white hover:bg-white/5'
                             }`}
-                            style={{ color: isActive ? '#25004D' : 'rgba(255,255,255,0.7)' }}
+                            style={isActive ? {
+                              background: 'rgba(255, 255, 255, 0.45)',
+                              border: '2px solid rgba(255, 255, 255, 0.9)',
+                              boxShadow: '0 4px 15px rgba(45, 10, 78, 0.15), 0 2px 8px rgba(74, 20, 140, 0.12), 0 1px 3px rgba(157, 78, 221, 0.08)',
+                              backdropFilter: 'blur(30px) saturate(180%)',
+                              WebkitBackdropFilter: 'blur(30px) saturate(180%)',
+                              color: '#FFFFFF'
+                            } : { color: 'rgba(255,255,255,0.7)' }}
                           >
                             <Icon
-                              className="h-6 w-6 shrink-0 group-hover:text-white"
-                              style={{ color: isActive ? '#25004D' : 'rgba(255,255,255,0.6)' }}
+                              className="h-6 w-6 shrink-0 text-white group-hover:text-white"
                             />
                             {item.name}
                           </Link>
