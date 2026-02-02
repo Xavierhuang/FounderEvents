@@ -4,17 +4,17 @@
 
 @layer base {
   :root {
-    --color-primary-50: 243 241 255;
-    --color-primary-100: 235 229 255;
-    --color-primary-200: 217 206 255;
-    --color-primary-300: 190 166 255;
-    --color-primary-400: 159 117 255;
-    --color-primary-500: 132 61 255;
-    --color-primary-600: 124 26 255;
-    --color-primary-700: 112 16 247;
-    --color-primary-800: 93 13 208;
-    --color-primary-900: 78 14 172;
-    --color-primary-950: 48 5 117;
+    --color-primary-50: 245 240 255;
+    --color-primary-100: 237 230 255;
+    --color-primary-200: 220 206 255;
+    --color-primary-300: 196 168 255;
+    --color-primary-400: 166 127 255;
+    --color-primary-500: 90 26 214;
+    --color-primary-600: 37 0 77;
+    --color-primary-700: 37 0 77;
+    --color-primary-800: 30 0 62;
+    --color-primary-900: 25 0 51;
+    --color-primary-950: 37 0 77;
   }
 
   html {
